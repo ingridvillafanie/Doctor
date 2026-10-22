@@ -1,0 +1,1202 @@
+<title>Clínica Bujanda Platform</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400;1,6..96,500&family=Jost:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: editorial arch hero + quiet ivory bands for the public site; sidebar workspace for portals and back office. */
+:root{
+  --bg:#FAF8F4; --surface:#F2EDE4; --sand:#E4DACB; --line:#DDD3C4;
+  --fg:#1F1D1A; --muted:#6B655D; --stone:#8C867D;
+  --gold:#866B40; --gold-soft:#CBB68F; --inv:#FAF8F4; --ink:#1F1D1A;
+  --ok:#3E6A4D; --warn:#8F6418; --bad:#9A3A31; --info:#3B5871;
+  --ok-bg:#E3ECE3; --warn-bg:#F3E8D2; --bad-bg:#F3DEDA; --info-bg:#DFE7EE;
+  --f-display:'Bodoni Moda',Didot,'Bodoni 72','Times New Roman',serif;
+  --f-body:'Jost','Avenir Next','Helvetica Neue',Arial,sans-serif;
+  --f-mono:'DM Mono',ui-monospace,Menlo,Consolas,monospace;
+  --r:2px; --ease:cubic-bezier(.2,.7,.2,1);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#131211; --surface:#1C1A18; --sand:#2A2723; --line:#36312B;
+  --fg:#EEE9E0; --muted:#A49D92; --stone:#8B847A;
+  --gold:#CFB687; --gold-soft:#6E5D40; --inv:#131211; --ink:#EEE9E0;
+  --ok:#86B795; --warn:#DDAE5E; --bad:#E4928A; --info:#93B3CE;
+  --ok-bg:#1F2B22; --warn-bg:#2D2414; --bad-bg:#2E1B19; --info-bg:#1A2530; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#131211; --surface:#1C1A18; --sand:#2A2723; --line:#36312B;
+  --fg:#EEE9E0; --muted:#A49D92; --stone:#8B847A;
+  --gold:#CFB687; --gold-soft:#6E5D40; --inv:#131211; --ink:#EEE9E0;
+  --ok:#86B795; --warn:#DDAE5E; --bad:#E4928A; --info:#93B3CE;
+  --ok-bg:#1F2B22; --warn-bg:#2D2414; --bad-bg:#2E1B19; --info-bg:#1A2530; color-scheme:dark}
+
+*{box-sizing:border-box}
+html,body{background:var(--bg);color:var(--fg)}
+body{font-family:var(--f-body);font-size:16px;line-height:1.6;font-weight:400;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--bg)}
+h1,h2,h3,h4{font-family:var(--f-display);font-weight:400;line-height:1.08;margin:0;text-wrap:balance;letter-spacing:-.01em}
+p{margin:0}
+a{color:inherit}
+button{font:inherit;color:inherit;cursor:pointer}
+input,select,textarea{font:inherit;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:var(--r);padding:.6rem .75rem;width:100%;min-width:0}
+textarea{resize:vertical;min-height:84px}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold)}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+.wrap{max-width:1240px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.eyebrow{font-family:var(--f-body);font-size:.72rem;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);font-weight:500}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+.small{font-size:.86rem}
+.tiny{font-size:.74rem}
+
+/* demo strip + header */
+.demo-strip{background:var(--ink);color:var(--inv);font-size:.76rem;letter-spacing:.04em}
+.demo-strip .wrap{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding-block:7px}
+.demo-strip button{background:transparent;border:1px solid color-mix(in srgb,var(--inv) 40%,transparent);color:var(--inv);padding:3px 10px;border-radius:99px;font-size:.74rem;letter-spacing:.06em}
+.hdr{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.hdr .wrap{display:flex;align-items:center;gap:20px;padding-block:14px}
+.logo{display:flex;flex-direction:column;line-height:1;background:none;border:0;padding:0;text-align:left}
+.logo b{font-family:var(--f-display);font-weight:400;font-size:1.55rem;letter-spacing:.32em}
+.logo span{font-size:.58rem;letter-spacing:.42em;text-transform:uppercase;color:var(--muted);margin-top:5px}
+.nav{display:flex;gap:2px;flex:1;justify-content:center;flex-wrap:wrap}
+.nav button{background:none;border:0;padding:6px 10px;font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);position:relative}
+.nav button:hover,.nav button.on{color:var(--fg)}
+.nav button.on::after{content:"";position:absolute;left:10px;right:10px;bottom:0;height:1px;background:var(--gold)}
+.hdr-tools{display:flex;align-items:center;gap:10px}
+.lang{display:flex;border:1px solid var(--line);border-radius:99px;overflow:hidden}
+.lang button{background:none;border:0;padding:4px 10px;font-size:.72rem;letter-spacing:.14em;color:var(--muted)}
+.lang button.on{background:var(--ink);color:var(--inv)}
+.icon-btn{background:none;border:1px solid var(--line);border-radius:99px;padding:5px 12px;font-size:.76rem;letter-spacing:.08em;display:inline-flex;gap:6px;align-items:center}
+.menu-btn{display:none}
+@media (max-width:1080px){.nav{display:none}.menu-btn{display:inline-flex}.nav.open{display:flex;position:absolute;top:100%;left:0;right:0;flex-direction:column;background:var(--bg);border-bottom:1px solid var(--line);padding:12px max(16px,env(safe-area-inset-left,0px)) 18px}.nav.open button{text-align:left;padding:10px 0}.nav.open button.on::after{display:none}}
+@media (max-width:560px){.hdr-tools .hide-sm{display:none}.logo b{font-size:1.2rem}}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:var(--r);padding:.78rem 1.3rem;font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;font-weight:500;border:1px solid var(--ink);background:var(--ink);color:var(--inv);transition:background .25s var(--ease),color .25s var(--ease)}
+.btn:hover{background:transparent;color:var(--fg)}
+.btn.ghost{background:transparent;color:var(--fg)}
+.btn.ghost:hover{background:var(--ink);color:var(--inv)}
+.btn.gold{background:var(--gold);border-color:var(--gold);color:var(--inv)}
+.btn.gold:hover{background:transparent;color:var(--gold)}
+.btn.sm{padding:.45rem .8rem;font-size:.7rem;letter-spacing:.12em}
+.btn[disabled]{opacity:.4;pointer-events:none}
+.link{background:none;border:0;padding:0;border-bottom:1px solid var(--gold);font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--fg)}
+
+/* hero */
+.hero{padding-block:clamp(28px,5vw,64px) clamp(36px,6vw,80px)}
+.hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:clamp(24px,5vw,72px);align-items:center}
+.hero h1{font-size:clamp(2.6rem,6.4vw,5.6rem);line-height:.98}
+.hero h1 em{font-style:italic;color:var(--gold)}
+.hero-copy{display:grid;gap:26px}
+.hero-copy p{max-width:44ch;color:var(--muted);font-size:1.06rem}
+.hero-ctas{display:flex;gap:12px;flex-wrap:wrap}
+.slide-anim{animation:rise .9s var(--ease) both}
+@keyframes rise{from{opacity:.0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.slide-ctrl{display:flex;align-items:center;gap:16px;margin-top:6px}
+.slide-ctrl .bar{flex:1;max-width:220px;height:1px;background:var(--line);position:relative;overflow:hidden}
+.slide-ctrl .bar i{position:absolute;inset:0;background:var(--gold);transform-origin:left;animation:fill 7s linear both}
+@keyframes fill{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.slide-ctrl button{background:none;border:1px solid var(--line);width:36px;height:36px;border-radius:99px}
+.slide-ctrl .count{font-family:var(--f-mono);font-size:.78rem;color:var(--muted)}
+@media (max-width:820px){.hero-grid{grid-template-columns:1fr}.hero-art{order:-1;max-width:420px}}
+
+/* placeholder art */
+.art{position:relative;width:100%;max-width:100%;overflow:hidden;background:var(--surface);isolation:isolate}
+.art::before{content:"";position:absolute;inset:0;z-index:-1;background:
+  radial-gradient(60% 50% at 70% 30%,color-mix(in srgb,var(--gold-soft) 55%,transparent),transparent 70%),
+  radial-gradient(70% 60% at 20% 90%,color-mix(in srgb,var(--sand) 90%,transparent),transparent 70%),
+  linear-gradient(160deg,var(--surface),var(--sand))}
+.art svg{position:absolute;inset:0;width:100%;height:100%}
+.art svg path{fill:none;stroke:var(--gold);stroke-width:1.1;opacity:.75}
+.art-tag{position:absolute;left:12px;bottom:12px;font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;background:color-mix(in srgb,var(--bg) 80%,transparent);color:var(--muted);padding:4px 8px;border-radius:99px}
+.arch{aspect-ratio:4/5;border-radius:999px 999px var(--r) var(--r)}
+.art.v2::before{background:radial-gradient(55% 45% at 30% 30%,color-mix(in srgb,var(--gold-soft) 60%,transparent),transparent 70%),linear-gradient(200deg,var(--sand),var(--surface))}
+.art.v3::before{background:radial-gradient(50% 50% at 50% 60%,color-mix(in srgb,var(--stone) 30%,transparent),transparent 70%),linear-gradient(140deg,var(--surface),var(--sand) 70%)}
+.hero-art{position:relative;justify-self:center;width:100%}
+.hero-art .badge-float{position:absolute;right:-6px;bottom:18%;background:var(--bg);border:1px solid var(--line);padding:12px 16px;max-width:210px;font-size:.78rem;line-height:1.45}
+.hero-art .badge-float b{display:block;font-family:var(--f-display);font-weight:400;font-size:1.15rem}
+
+/* sections */
+.band{padding-block:clamp(52px,8vw,104px)}
+.band.alt{background:var(--surface)}
+.band.ink{background:var(--ink);color:var(--inv)}
+.band.ink .muted{color:color-mix(in srgb,var(--inv) 65%,transparent)}
+.band.ink .eyebrow{color:var(--gold-soft)}
+.sec-head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;margin-bottom:clamp(28px,4vw,48px)}
+.sec-head h2{font-size:clamp(2rem,4.2vw,3.4rem);margin-top:10px}
+.sec-head p{max-width:52ch}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,5vw,64px);align-items:center}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+@media (max-width:900px){.grid3,.grid4{grid-template-columns:1fr 1fr}.grid2{grid-template-columns:1fr}}
+@media (max-width:560px){.grid3,.grid4{grid-template-columns:1fr}}
+.prose{display:grid;gap:16px;max-width:62ch}
+.prose p{color:var(--muted)}
+.quote{font-family:var(--f-display);font-style:italic;font-size:clamp(1.5rem,3vw,2.3rem);line-height:1.25}
+
+.tile{background:none;border:0;border-top:1px solid var(--line);padding:22px 0 0;text-align:left;display:grid;gap:10px;align-content:start}
+.tile h3{font-size:1.5rem}
+.tile .arrow{font-family:var(--f-mono);color:var(--gold);font-size:.8rem}
+.tile:hover h3{color:var(--gold)}
+.card{background:var(--bg);border:1px solid var(--line);border-radius:var(--r);padding:22px;display:grid;gap:12px;align-content:start;min-width:0}
+.band.alt .card{background:var(--bg)}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:3px 9px;border-radius:99px;border:1px solid var(--line);color:var(--muted);white-space:nowrap}
+.chip.ok{background:var(--ok-bg);color:var(--ok);border-color:transparent}
+.chip.warn{background:var(--warn-bg);color:var(--warn);border-color:transparent}
+.chip.bad{background:var(--bad-bg);color:var(--bad);border-color:transparent}
+.chip.info{background:var(--info-bg);color:var(--info);border-color:transparent}
+.chip.gold{border-color:var(--gold);color:var(--gold)}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.notice{border-left:2px solid var(--gold);background:var(--surface);padding:12px 16px;font-size:.86rem;color:var(--muted)}
+.notice b{color:var(--fg);font-weight:500}
+.band.alt .notice{background:var(--bg)}
+
+/* treatments */
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:28px}
+.filters button{background:none;border:1px solid var(--line);border-radius:99px;padding:6px 14px;font-size:.76rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.filters button.on{background:var(--ink);color:var(--inv);border-color:var(--ink)}
+.tgroup{border-top:1px solid var(--line);padding:20px 0;display:grid;grid-template-columns:240px 1fr;gap:20px}
+.tgroup h3{font-size:1.4rem}
+.tgroup ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:2px 24px}
+.tgroup li button{background:none;border:0;padding:7px 0;text-align:left;width:100%;display:flex;justify-content:space-between;gap:10px;border-bottom:1px dashed var(--line);font-size:.95rem}
+.tgroup li button:hover{color:var(--gold)}
+.tgroup li button span{color:var(--gold);font-family:var(--f-mono);font-size:.75rem}
+@media (max-width:700px){.tgroup{grid-template-columns:1fr;gap:8px}}
+
+/* product */
+.prod .art{aspect-ratio:1}
+.prod h3{font-size:1.35rem}
+.price{font-family:var(--f-mono);font-size:.95rem}
+
+/* modal + toast */
+.scrim{position:fixed;inset:0;z-index:80;background:color-mix(in srgb,var(--ink) 55%,transparent);display:grid;place-items:center;padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));animation:fade .25s ease both}
+@keyframes fade{from{opacity:0}}
+.modal{background:var(--bg);color:var(--fg);width:min(760px,100%);max-height:100%;overflow:auto;border-radius:var(--r);padding:clamp(20px,4vw,40px);display:grid;gap:18px;animation:rise .4s var(--ease) both}
+.modal-h{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
+.modal-h h2{font-size:clamp(1.6rem,3.4vw,2.4rem)}
+.x{background:none;border:1px solid var(--line);border-radius:99px;width:36px;height:36px;flex:none}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:90;background:var(--ink);color:var(--inv);padding:12px 18px;border-radius:var(--r);font-size:.86rem;max-width:min(560px,calc(100% - 32px));box-shadow:0 10px 30px rgba(0,0,0,.18);animation:rise .35s var(--ease) both}
+
+/* forms */
+.field{display:grid;gap:6px;min-width:0}
+.field label{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.row.between{justify-content:space-between}
+.check{display:flex;gap:10px;align-items:flex-start;font-size:.88rem}
+.check input{width:auto;margin-top:4px}
+
+/* workspace */
+.ws{display:grid;grid-template-columns:250px 1fr;min-height:calc(100vh - 110px)}
+.side{border-right:1px solid var(--line);padding:24px 16px;display:flex;flex-direction:column;gap:2px;background:var(--surface)}
+.side .who{padding:0 10px 18px;margin-bottom:10px;border-bottom:1px solid var(--line)}
+.side .who b{font-family:var(--f-display);font-weight:400;font-size:1.2rem;display:block}
+.side button{background:none;border:0;text-align:left;padding:9px 10px;border-radius:var(--r);font-size:.9rem;color:var(--muted);display:flex;justify-content:space-between;gap:8px}
+.side button.on{background:var(--bg);color:var(--fg);box-shadow:inset 2px 0 0 var(--gold)}
+.side button .n{font-family:var(--f-mono);font-size:.72rem;background:var(--gold);color:var(--inv);border-radius:99px;padding:0 7px}
+.side .grp{font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;color:var(--stone);padding:16px 10px 6px}
+.main{padding:clamp(18px,3vw,36px) max(16px,env(safe-area-inset-right,0px)) 60px clamp(18px,3vw,36px);min-width:0;display:grid;gap:24px;align-content:start}
+.main h1{font-size:clamp(1.9rem,3.6vw,2.8rem)}
+@media (max-width:900px){.ws{grid-template-columns:1fr}.side{flex-direction:row;overflow-x:auto;border-right:0;border-bottom:1px solid var(--line);padding:10px max(16px,env(safe-area-inset-left,0px))}.side .who,.side .grp{display:none}.side button{white-space:nowrap;flex:none}.main{padding-left:max(16px,env(safe-area-inset-left,0px))}}
+.kpis{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}
+.kpi{background:var(--bg);padding:16px 18px;display:grid;gap:4px}
+.kpi .v{font-family:var(--f-display);font-size:1.9rem;line-height:1.1;font-variant-numeric:tabular-nums}
+.kpi .l{font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.kpi .s{font-size:.76rem;color:var(--muted)}
+.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r)}
+table{border-collapse:collapse;width:100%;font-size:.88rem}
+th{font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:500;text-align:left;padding:10px 12px;background:var(--surface);white-space:nowrap}
+td{padding:11px 12px;border-top:1px solid var(--line);vertical-align:top}
+td.num{font-family:var(--f-mono);text-align:right;white-space:nowrap}
+.kanban{display:grid;grid-auto-flow:column;grid-auto-columns:230px;gap:12px;overflow-x:auto;padding-bottom:8px}
+.col{background:var(--surface);border-radius:var(--r);padding:10px;display:grid;gap:8px;align-content:start;min-height:120px}
+.col h4{font-family:var(--f-body);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:500;display:flex;justify-content:space-between}
+.lead{background:var(--bg);border:1px solid var(--line);border-radius:var(--r);padding:10px;display:grid;gap:6px;font-size:.84rem}
+.lead b{font-weight:500}
+.lead .row{gap:4px}
+.lead .row button{background:none;border:1px solid var(--line);border-radius:var(--r);padding:1px 8px;font-size:.78rem}
+.thread{display:grid;gap:12px;max-height:440px;overflow:auto;padding:4px}
+.msg{max-width:78%;padding:10px 14px;border-radius:var(--r);background:var(--surface);font-size:.9rem;display:grid;gap:4px}
+.msg.me{justify-self:end;background:var(--ink);color:var(--inv)}
+.msg .meta{font-size:.7rem;opacity:.7}
+.steps{display:flex;gap:6px;flex-wrap:wrap}
+.steps span{font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;padding:4px 10px;border-bottom:1px solid var(--line);color:var(--muted)}
+.steps span.on{border-color:var(--gold);color:var(--fg)}
+.days{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px}
+.days button{flex:none;background:var(--bg);border:1px solid var(--line);border-radius:var(--r);padding:8px 12px;display:grid;text-align:center;min-width:64px}
+.days button b{font-family:var(--f-display);font-weight:400;font-size:1.4rem;line-height:1}
+.days button.on{background:var(--ink);color:var(--inv);border-color:var(--ink)}
+.slots{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:8px}
+.slots button{background:var(--bg);border:1px solid var(--line);border-radius:var(--r);padding:8px;font-family:var(--f-mono);font-size:.85rem}
+.slots button.on{background:var(--gold);color:var(--inv);border-color:var(--gold)}
+.slots button[disabled]{opacity:.35;text-decoration:line-through;cursor:not-allowed}
+.mp{border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.mp-h{background:var(--info-bg);color:var(--info);padding:10px 16px;font-size:.78rem;letter-spacing:.06em;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.mp-b{padding:18px;display:grid;gap:14px}
+.toggle{position:relative;width:40px;height:22px;flex:none;border-radius:99px;border:1px solid var(--line);background:var(--surface)}
+.toggle::after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:99px;background:var(--stone);transition:transform .2s var(--ease)}
+.toggle.on{background:var(--gold);border-color:var(--gold)}
+.toggle.on::after{transform:translateX(18px);background:var(--inv)}
+.list-row{display:flex;justify-content:space-between;gap:14px;align-items:center;padding:12px 0;border-top:1px solid var(--line);flex-wrap:wrap}
+.list-row>div{min-width:0}
+.mapbox{aspect-ratio:16/10;max-width:100%;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);position:relative;overflow:hidden}
+.mapbox svg{width:100%;height:100%;display:block}
+.chart svg{width:100%;height:auto;display:block}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:.76rem;color:var(--muted)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+
+/* footer */
+.foot{background:var(--ink);color:var(--inv);padding-block:56px 32px}
+.foot .grid4{gap:28px}
+.foot h4{font-family:var(--f-body);font-size:.66rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold-soft);font-weight:500;margin-bottom:12px}
+.foot p,.foot button{font-size:.88rem;color:color-mix(in srgb,var(--inv) 75%,transparent)}
+.foot button{background:none;border:0;padding:3px 0;display:block;text-align:left}
+.foot .legal{margin-top:40px;padding-top:20px;border-top:1px solid color-mix(in srgb,var(--inv) 18%,transparent);font-size:.74rem;color:color-mix(in srgb,var(--inv) 55%,transparent);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+
+.faq details{border-top:1px solid var(--line);padding:16px 0}
+.faq summary{cursor:pointer;font-family:var(--f-display);font-size:1.2rem;list-style:none;display:flex;justify-content:space-between;gap:12px}
+.faq summary::after{content:"+";color:var(--gold);font-family:var(--f-mono)}
+.faq details[open] summary::after{content:"–"}
+.faq details p{margin-top:10px;color:var(--muted);max-width:70ch}
+.roles{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.roles button{background:var(--bg);border:1px solid var(--line);border-radius:var(--r);padding:18px;text-align:left;display:grid;gap:6px}
+.roles button:hover,.roles button.on{border-color:var(--gold)}
+.roles b{font-family:var(--f-display);font-weight:400;font-size:1.25rem}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+<div id="app"></div><div id="toast"></div>
+<script>
+/* ===== DEMO DATA — todo ficticio salvo datos institucionales tomados del sitio actual ===== */
+const CLINIC = {
+  name:'Clínica Bujanda', doctor:'Dr. Diego Bujanda', mn:'MN 110 609',
+  address:'Av. Cabildo 875, 2° A, CABA', hours:{es:'Lunes a viernes, 10 a 20 h',en:'Monday to Friday, 10 am to 8 pm'},
+  phone:'(011) 4777-9638', wa:'+54 9 11 5139-1166', waUrl:'https://wa.me/5491151391166', email:'info@doctorbujanda.com',
+  maps:'https://www.google.com/maps/search/?api=1&query=Av.+Cabildo+875+CABA',
+  ig:'https://www.instagram.com/drdiegobujanda/', yt:'https://www.youtube.com/channel/UCT0JlFARN9KbOiSqwBanL6w', fb:'https://www.facebook.com/DrBujanda/'
+};
+const NOW = new Date('2026-10-22T11:00:00-03:00'); // reloj de demostración (hora de Buenos Aires)
+
+/* Catálogo: nombres del sitio actual, con la clasificación femenino/masculino corregida */
+const PROC = [
+ {g:'mamas',cat:'q',sex:'f',es:'Mamas',en:'Breast',items:['Aumento mamario|Breast augmentation','Reducción de mamas|Breast reduction','Pexia mamaria (levantamiento)|Mastopexy (breast lift)','Reconstrucción mamaria|Breast reconstruction']},
+ {g:'intf',cat:'q',sex:'f',es:'Intimidad femenina',en:'Female intimate',items:['Vaginoplastía (labios menores y paredes internas)|Vaginoplasty','Rejuvenecimiento vulvar con lipofilling|Vulvar rejuvenation with lipofilling','Lifting vulvovaginal|Vulvovaginal lift']},
+ {g:'pect',cat:'q',sex:'m',es:'Pectorales',en:'Chest',items:['Ginecomastía|Gynecomastia','Lifting de pectorales|Chest lift','Lipofilling de pectorales|Pectoral lipofilling','Aumento pectoral con prótesis|Pectoral implants']},
+ {g:'intm',cat:'q',sex:'m',es:'Intimidad masculina',en:'Male intimate',items:['Agrandamiento de pene|Penile enlargement','Engrosamiento con lipofilling|Girth enhancement with lipofilling','Lifting de testículos|Scrotal lift']},
+ {g:'rostro',cat:'q',sex:'u',es:'Rostro',en:'Face',items:['Lifting cérvico-facial|Face and neck lift','Mini lifting endoscópico|Endoscopic mini lift','Adelgazamiento del rostro (bichectomía)|Buccal fat reduction','Masculinización facial|Facial masculinization']},
+ {g:'perfil',cat:'q',sex:'u',es:'Perfil',en:'Profile',items:['Perfiloplastía|Profileplasty','Pómulos, mentón y mandíbula|Cheek, chin and jaw contouring','Lifting de cejas|Brow lift']},
+ {g:'nariz',cat:'q',sex:'u',es:'Nariz',en:'Nose',items:['Rinoplastía|Rhinoplasty','Lifting nasal|Nasal tip lift']},
+ {g:'ojos',cat:'q',sex:'u',es:'Ojos',en:'Eyes',items:['Blefaroplastía superior e inferior|Upper and lower blepharoplasty','Sofisticación de la mirada|Eye contour refinement','Occidentalización|Eyelid crease creation']},
+ {g:'orejas',cat:'q',sex:'u',es:'Orejas',en:'Ears',items:['Auriculoplastía|Otoplasty','Orejas en asa y en punta|Prominent and pointed ears','Lobuloplastía|Earlobe repair']},
+ {g:'abd',cat:'q',sex:'u',es:'Abdomen',en:'Abdomen',items:['Lipoescultura abdominal|Abdominal liposculpture','Marcación HD abdominal|HD abdominal etching','M.E.L.A. abdominal|M.E.L.A. abdominal','Dermolipectomía|Abdominoplasty']},
+ {g:'glq',cat:'q',sex:'u',es:'Glúteos',en:'Buttocks',items:['Aumento de glúteos con prótesis|Gluteal implants','Lipotransferencia glútea (grasa autóloga)|Gluteal fat transfer','Lifting glúteo|Buttock lift']},
+ {g:'piernas',cat:'q',sex:'u',es:'Piernas',en:'Legs',items:['Lifting de cara interna de muslos|Inner thigh lift','Lipo de rodillas y contorno de muslos|Knee and thigh liposuction','Marcación HD muscular|HD muscle definition','M.E.L.A. de piernas|M.E.L.A. legs']},
+ {g:'brazos',cat:'q',sex:'u',es:'Brazos',en:'Arms',items:['Lipo de brazos, codos y hombros|Arm, elbow and shoulder liposuction','Braquioplastía|Brachioplasty','Lifting de codos|Elbow lift']},
+ {g:'cic',cat:'q',sex:'u',es:'Cicatrices',en:'Scars',items:['Tratamiento de cicatriz inestética|Scar revision','Cicatriz hipertrófica, hiperpigmentada y queloide|Hypertrophic scars and keloids']},
+ {g:'tox',cat:'nq',sex:'u',es:'Toxina botulínica',en:'Botulinum toxin',items:['Baby botox|Baby botox','Levantamiento de cejas|Brow lift','Líneas de expresión|Expression lines','Hiperhidrosis|Hyperhidrosis']},
+ {g:'relleno',cat:'nq',sex:'u',es:'Rellenos faciales',en:'Facial fillers',items:['Pómulos, mandíbula y mentón|Cheeks, jaw and chin','Perfiloplastía sin cirugía|Non-surgical profileplasty','Rinomodelación|Non-surgical rhinoplasty','Dorso y punta nasal|Nasal dorsum and tip','Colapso del ala nasal|Nasal valve collapse']},
+ {g:'labios',cat:'nq',sex:'u',es:'Labios',en:'Lips',items:['Aumento de volumen|Lip volume','Perfilado y modelación|Lip contouring','Marcación del filtrum|Philtrum definition']},
+ {g:'ojeras',cat:'nq',sex:'u',es:'Ojeras',en:'Under-eye',items:['Ácido hialurónico en ojeras|Tear trough hyaluronic acid']},
+ {g:'plasma',cat:'nq',sex:'u',es:'Plasma y bioestimulación',en:'Plasma and biostimulation',items:['Plasma rico en plaquetas (cara, cuello, escote)|PRP face, neck and décolleté','Bioestimulación celular|Cellular biostimulation']},
+ {g:'piel',cat:'nq',sex:'u',es:'Piel, manchas y acné',en:'Skin, pigmentation and acne',items:['Peeling láser (resurfacing)|Laser resurfacing','Peeling químico|Chemical peel','Tratamiento de acné|Acne treatment','Punta de diamante|Diamond-tip microdermabrasion']},
+ {g:'glnq',cat:'nq',sex:'u',es:'Glúteos sin cirugía',en:'Non-surgical buttocks',items:['Aumento con ácido hialurónico|Hyaluronic acid augmentation','Aumento con hidroxiapatita|Hydroxyapatite augmentation','Aumento y contorno con Sculptra|Sculptra augmentation and contour']},
+ {g:'corp',cat:'nq',sex:'u',es:'Celulitis, flacidez y estrías',en:'Cellulite, laxity and stretch marks',items:['Mesoterapia reafirmante|Firming mesotherapy','Mesoterapia lipolítica|Lipolytic mesotherapy','Tratamiento de estrías|Stretch mark treatment','Vendas frías|Cold wraps']},
+ {g:'linf',cat:'nq',sex:'u',es:'Linfedema y masajes',en:'Lymphedema and massage',items:['Drenaje linfático|Lymphatic drainage','Masajes posquirúrgicos|Post-surgical massage','Masajes modeladores|Body-shaping massage','Cavitación y medias|Cavitation and compression']},
+ {g:'varices',cat:'nq',sex:'u',es:'Várices',en:'Varicose veins',items:['Escleroterapia|Sclerotherapy','Láser vascular|Vascular laser']},
+ {g:'pelo',cat:'nq',sex:'u',es:'Cabello',en:'Hair',items:['Plasma capilar|Scalp PRP','Mesoterapia capilar|Scalp mesotherapy']},
+ {g:'manos',cat:'nq',sex:'u',es:'Manos',en:'Hands',items:['Rejuvenecimiento de manos|Hand rejuvenation','Hidratación con ácido hialurónico|Hyaluronic hydration']},
+ {g:'nutri',cat:'nq',sex:'u',es:'Nutrición y bienestar',en:'Nutrition and wellness',items:['Plan nutricional personalizado|Personalized nutrition plan','Plan de ejercicios|Exercise plan','Medicina ortomolecular|Orthomolecular medicine']}
+];
+const FLAGSHIP = {
+ 'Rinoplastía':{es:'Cirugía que modifica la forma, el tamaño o la proporción de la nariz, y que puede incluir mejoras funcionales de la respiración.',en:'Surgery that changes the shape, size or proportion of the nose, and may include functional breathing improvements.'},
+ 'Aumento mamario':{es:'Cirugía para aumentar el volumen o mejorar la forma de las mamas mediante implantes o transferencia de grasa propia.',en:'Surgery to increase breast volume or improve shape using implants or the patient\'s own fat.'},
+ 'Blefaroplastía superior e inferior':{es:'Cirugía de párpados que trata el exceso de piel o las bolsas para una mirada más descansada.',en:'Eyelid surgery that treats excess skin or bags for a more rested look.'},
+ 'Aumento y contorno con Sculptra':{es:'Bioestimulación con ácido poli-L-láctico que estimula colágeno propio para mejorar volumen y contorno de manera progresiva.',en:'Poly-L-lactic acid biostimulation that triggers the body\'s own collagen to improve volume and contour progressively.'},
+ 'Líneas de expresión':{es:'Aplicación de toxina botulínica para suavizar líneas dinámicas de frente, entrecejo y patas de gallo.',en:'Botulinum toxin to soften dynamic lines of the forehead, frown area and crow\'s feet.'}
+};
+
+const PATIENTS = [
+ {id:'p1',name:'Lucía Ferrer',city:'Montevideo',country:'Uruguay',channel:'Instagram',since:'2026-08-04',intl:true},
+ {id:'p2',name:'Martina Gómez',city:'CABA',country:'Argentina',channel:'Google',since:'2026-09-12'},
+ {id:'p3',name:'Tomás Ibarra',city:'Córdoba',country:'Argentina',channel:'Recomendación',since:'2026-10-02',intl:true},
+ {id:'p4',name:'Valentina Rossi',city:'Madrid',country:'España',channel:'Web',since:'2026-07-21',intl:true},
+ {id:'p5',name:'Joaquín Méndez',city:'CABA',country:'Argentina',channel:'WhatsApp',since:'2026-10-09'},
+ {id:'p6',name:'Carolina Sáenz',city:'Mendoza',country:'Argentina',channel:'Instagram',since:'2026-10-14',intl:true}
+];
+const PROS = [
+ {id:'d1',name:'Dra. Ana Lorenzo',spec:'Dermatología',country:'Argentina',city:'Rosario',inst:'Clínica demo Rosario',verified:true,consent:{email:true,wa:true},interests:['Bioestimulación']},
+ {id:'d2',name:'Dr. Felipe Arango',spec:'Cirugía plástica',country:'Colombia',city:'Medellín',inst:'Hospital demo Medellín',verified:true,consent:{email:true,wa:false},interests:['Armonización facial','Bioestimulación']},
+ {id:'d3',name:'Dra. Sofía Paredes',spec:'Medicina estética',country:'Chile',city:'Santiago',inst:'Centro demo Santiago',verified:false,consent:{email:true,wa:true},interests:['Armonización facial']},
+ {id:'d4',name:'Dr. Nicolás Vidal',spec:'Dermatología',country:'Uruguay',city:'Montevideo',inst:'Policlínica demo',verified:true,consent:{email:false,wa:false},interests:['Bioestimulación']}
+];
+
+function mkState(){ return {
+ lang:'es', role:'visitor', view:'home', sub:null, slide:0, menu:false, modal:null, toast:null,
+ tFilter:'all', tSex:'all', cart:[], fees:{pres:60000, video:45000},
+ policy:{refundHours:24},
+ appts:[
+  {id:'a1',pid:'p1',type:'video',start:'2026-10-23T15:00:00-03:00',status:'confirmado',pay:'y1'},
+  {id:'a2',pid:'p2',type:'pres',start:'2026-10-26T11:00:00-03:00',status:'pagado',pay:'y2'},
+  {id:'a3',pid:'p3',type:'video',start:'2026-10-27T17:00:00-03:00',status:'pagado',pay:'y3'},
+  {id:'a4',pid:'p4',type:'pres',start:'2026-10-29T12:00:00-03:00',status:'confirmado',pay:'y4'},
+  {id:'a5',pid:'p5',type:'pres',start:'2026-10-22T18:00:00-03:00',status:'confirmado',pay:'y5'},
+  {id:'a6',pid:'p6',type:'video',start:'2026-10-20T16:00:00-03:00',status:'cancelado',pay:'y6',cancel:{by:'paciente',refund:true}},
+  {id:'a7',pid:'p1',type:'pres',start:'2026-10-30T10:00:00-03:00',status:'confirmado',pay:'y7',note:'Control posoperatorio'},
+  {id:'a8',pid:'p2',type:'pres',start:'2026-10-06T11:00:00-03:00',status:'realizada',pay:'y8'},
+  {id:'a9',pid:'p5',type:'video',start:'2026-10-14T19:00:00-03:00',status:'realizada',pay:'y9'},
+  {id:'a10',pid:'p3',type:'pres',start:'2026-10-15T12:00:00-03:00',status:'cancelado',pay:'y10',cancel:{by:'paciente',refund:false}},
+  {id:'a11',pid:'p1',type:'pres',start:'2026-09-15T12:00:00-03:00',status:'realizada',pay:'y11'}
+ ],
+ pays:[
+  {id:'y1',kind:'consulta',ref:'a1',amount:45000,status:'approved',date:'2026-10-18'},
+  {id:'y2',kind:'consulta',ref:'a2',amount:60000,status:'approved',date:'2026-10-20'},
+  {id:'y3',kind:'consulta',ref:'a3',amount:45000,status:'approved',date:'2026-10-21'},
+  {id:'y4',kind:'consulta',ref:'a4',amount:60000,status:'approved',date:'2026-10-10'},
+  {id:'y5',kind:'consulta',ref:'a5',amount:60000,status:'approved',date:'2026-10-19'},
+  {id:'y6',kind:'consulta',ref:'a6',amount:45000,status:'refunded',refunded:45000,date:'2026-10-12'},
+  {id:'y7',kind:'consulta',ref:'a7',amount:60000,status:'approved',date:'2026-10-16'},
+  {id:'y8',kind:'consulta',ref:'a8',amount:60000,status:'approved',date:'2026-10-01'},
+  {id:'y9',kind:'consulta',ref:'a9',amount:45000,status:'approved',date:'2026-10-11'},
+  {id:'y10',kind:'consulta',ref:'a10',amount:60000,status:'approved',date:'2026-10-08'},
+  {id:'y11',kind:'consulta',ref:'a11',amount:60000,status:'approved',date:'2026-09-10'},
+  {id:'y12',kind:'producto',ref:'o1',amount:38000,status:'approved',date:'2026-10-17'},
+  {id:'y13',kind:'producto',ref:'o2',amount:29000,status:'approved',date:'2026-10-19'},
+  {id:'y14',kind:'producto',ref:'o3',amount:29000,status:'pending',date:'2026-10-21'},
+  {id:'y15',kind:'capacitacion',ref:'e1',amount:950000,status:'approved',date:'2026-10-05'},
+  {id:'y16',kind:'capacitacion',ref:'e3',amount:780000,status:'approved',date:'2026-10-13'},
+  {id:'y17',kind:'capacitacion',ref:'e2',amount:950000,status:'pending',date:'2026-10-20'}
+ ],
+ hist:[ // registros históricos agregados (ficticios)
+  {m:'2026-05',consulta:1380000,producto:210000,capacitacion:0},
+  {m:'2026-06',consulta:1560000,producto:265000,capacitacion:1900000},
+  {m:'2026-07',consulta:1290000,producto:190000,capacitacion:0},
+  {m:'2026-08',consulta:1740000,producto:310000,capacitacion:2850000},
+  {m:'2026-09',consulta:1620000,producto:240000,capacitacion:0}
+ ],
+ surgeries:[ // registro clínico autorizado (no inferido de pagos)
+  {pid:'p1',proc:'Blefaroplastía superior',date:'2026-09-22'},
+  {pid:'p4',proc:'Lipoescultura abdominal',date:'2026-10-07'},
+  {pid:'p2',proc:'Pexia mamaria',date:'2026-10-16'}
+ ],
+ budgets:[
+  {id:'b1',pid:'p1',proc:'Rinomodelación',amount:520000,status:'enviado',date:'2026-10-15'},
+  {id:'b2',pid:'p4',proc:'Lipoescultura abdominal',amount:4800000,status:'aceptado',date:'2026-09-01'},
+  {id:'b3',pid:'p2',proc:'Blefaroplastía superior',amount:2900000,status:'enviado',date:'2026-10-08'},
+  {id:'b4',pid:'p5',proc:'Toxina botulínica · líneas de expresión',amount:380000,status:'aceptado',date:'2026-10-14'},
+  {id:'b5',pid:'p3',proc:'Rinoplastía',amount:5200000,status:'aclaracion',date:'2026-10-03'}
+ ],
+ msgs:{p1:[
+  {from:'doc',at:'2026-09-23T10:12:00-03:00',text:'Hola Lucía, ¿cómo pasaste la primera noche? Recordá seguir las indicaciones del documento que te dejé en Documentos.'},
+  {from:'pat',at:'2026-09-23T11:40:00-03:00',text:'¡Muy bien, doctor! Algo de inflamación pero sin dolor.'},
+  {from:'doc',at:'2026-10-02T09:05:00-03:00',text:'Excelente evolución en las fotos. Te espero en el control del 30/10.',file:'Foto de control (ficticia).jpg'}
+ ],p4:[{from:'pat',at:'2026-10-18T16:00:00-03:00',text:'Doctor, ¿puedo retomar caminatas suaves?'}]},
+ docs:[
+  {pid:'p1',name:'Indicaciones posoperatorias (ficticio).pdf',type:'Indicaciones',by:'Dr. Diego Bujanda',date:'2026-09-22'},
+  {pid:'p1',name:'Consentimiento informado — firmado (ficticio).pdf',type:'Consentimiento',by:'Dr. Diego Bujanda',date:'2026-09-15'},
+  {pid:'p1',name:'Receta electrónica (adaptador pendiente)',type:'Receta',by:'Dr. Diego Bujanda',date:'2026-09-22',rx:true}
+ ],
+ products:[
+  {id:'k1',name:'Aurum',es:'Máscara facial con oro 24k y perlas de colágeno.',en:'Facial mask with 24k gold and collagen pearls.',price:38000,stock:12,active:true,legal:'ok'},
+  {id:'k2',name:'Persea',es:'Bálsamo labial vegano de palta y melón.',en:'Vegan avocado and melon lip balm.',price:14500,stock:30,active:true,legal:'ok'},
+  {id:'k3',name:'Colágeno Signature',es:'Colágeno en polvo de la línea Signature.',en:'Signature line collagen powder.',price:29000,stock:8,active:true,legal:'revisar'},
+  {id:'k4',name:'Consulta Online · Gift',es:'Evaluación médica online de 30 minutos, para usar o regalar.',en:'30-minute online medical evaluation, to use or gift.',price:45000,stock:null,active:true,legal:'ok'},
+  {id:'k5',name:'Fit Complements',es:'Kit de medicación personalizado.',en:'Personalized medication kit.',price:0,stock:0,active:false,legal:'bloqueado'}
+ ],
+ orders:[
+  {id:'o1',pid:'p2',items:[['k1',1]],total:38000,pay:'y12',status:'preparando',date:'2026-10-17'},
+  {id:'o2',pid:'p5',items:[['k2',2]],total:29000,pay:'y13',status:'listo',date:'2026-10-19'},
+  {id:'o3',pid:'p6',items:[['k3',1]],total:29000,pay:'y14',status:'pago_pendiente',date:'2026-10-21'}
+ ],
+ workshops:[
+  {id:'w1',es:'Bioestimulación con ácido poli-L-láctico: planificación y técnica',en:'Poly-L-lactic acid biostimulation: planning and technique',mode:'Presencial · CABA',date:'2026-11-21',hours:8,seats:12,ars:950000,usd:900,req:true,published:true,spec:'Dermatología · Cirugía plástica · Medicina estética'},
+  {id:'w2',es:'Armonización facial: anatomía aplicada y seguridad',en:'Facial harmonization: applied anatomy and safety',mode:'Híbrido',date:'2026-12-05',hours:6,seats:16,ars:780000,usd:740,req:true,published:true,spec:'Medicina estética · Dermatología'},
+  {id:'w3',es:'Masterclass online: el abordaje Taylor Made',en:'Online masterclass: the Taylor Made approach',mode:'Online',date:'2027-02-13',hours:3,seats:60,ars:180000,usd:170,req:false,published:false,spec:'Profesionales de la salud'}
+ ],
+ enrolls:[
+  {id:'e1',did:'d1',wid:'w1',status:'pagado',pay:'y15'},
+  {id:'e2',did:'d2',wid:'w1',status:'pago_pendiente',pay:'y17'},
+  {id:'e3',did:'d4',wid:'w2',status:'pagado',pay:'y16'},
+  {id:'e4',did:'d3',wid:'w1',status:'verificacion'}
+ ],
+ leads:[
+  {id:'L-1041',pid:'p6',proc:'Lipotransferencia glútea',channel:'Instagram',owner:'Secretaría',date:'2026-10-14',stage:1,next:'Llamar y ofrecer evaluación'},
+  {id:'L-1042',pid:'p5',proc:'Toxina botulínica',channel:'WhatsApp',owner:'Secretaría',date:'2026-10-09',stage:7,next:'Agendar aplicación'},
+  {id:'L-1043',pid:'p3',proc:'Rinoplastía',channel:'Recomendación',owner:'Dr. Bujanda',date:'2026-10-02',stage:6,next:'Responder aclaración del presupuesto'},
+  {id:'L-1044',pid:'p2',proc:'Blefaroplastía superior',channel:'Google',owner:'Dr. Bujanda',date:'2026-09-12',stage:6,next:'Seguimiento del presupuesto'},
+  {id:'L-1045',pid:'p4',proc:'Lipoescultura abdominal',channel:'Web',owner:'Dr. Bujanda',date:'2026-07-21',stage:10,next:'Control administrativo'},
+  {id:'L-1046',pid:'p1',proc:'Rinomodelación',channel:'Instagram',owner:'Secretaría',date:'2026-10-15',stage:6,next:'Confirmar si acepta presupuesto'},
+  {id:'L-1047',name:'Consulta web (ficticia)',proc:'Aumento mamario',channel:'Web',owner:'Secretaría',date:'2026-10-21',stage:0,next:'Primer contacto'},
+  {id:'L-1048',name:'Consulta Instagram (ficticia)',proc:'Labios · aumento de volumen',channel:'Instagram',owner:'Secretaría',date:'2026-10-20',stage:2,next:'Enviar disponibilidad'},
+  {id:'L-1049',name:'Consulta Google (ficticia)',proc:'Sculptra glúteos',channel:'Google',owner:'Secretaría',date:'2026-10-18',stage:3,next:'Ofrecer turnos'}
+ ],
+ waitlist:[
+  {id:'wl1',name:'Paciente en espera A (ficticio)',type:'pres',pref:'Mañanas, esta semana'},
+  {id:'wl2',name:'Paciente en espera B (ficticio)',type:'video',pref:'Cualquier tarde'}
+ ],
+ tasks:[
+  {id:'t1',text:'Confirmar turnos pagados pendientes',done:false},
+  {id:'t2',text:'Coordinar retiro del pedido O2 por WhatsApp',done:false},
+  {id:'t3',text:'Enviar recordatorio a pacientes del lunes',done:true},
+  {id:'t4',text:'Pedir a Valentina Rossi su itinerario de llegada',done:false}
+ ],
+ perms:{solicitudes:true,agenda:true,pagos:true,recordatorios:true,crm:false,tienda:false,capacitaciones:false,clinica:false},
+ testimonials:[
+  {id:'tm1',text:{es:'Me sentí escuchada desde la primera consulta. El plan fue pensado para mí.',en:'I felt heard from the very first consultation. The plan was designed for me.'},by:'Paciente demo, 38',consent:true,published:true},
+  {id:'tm2',text:{es:'Viajé desde Montevideo y el acompañamiento fue impecable.',en:'I travelled from Montevideo and the support was impeccable.'},by:'Paciente demo, 44',consent:true,published:true},
+  {id:'tm3',text:{es:'Resultado natural, nadie nota qué me hice.',en:'Natural result, nobody can tell what I had done.'},by:'Paciente demo, 51',consent:false,published:false}
+ ],
+ seo:[
+  {path:'/es',title:'Clínica Bujanda | Cirugía plástica en Buenos Aires',desc:'Cirugía plástica y medicina estética con el Dr. Diego Bujanda (MN 110 609). Tratamientos personalizados en Av. Cabildo, CABA.',h1:true,alts:0,hreflang:true,schema:'MedicalClinic',reviewed:'2026-10-20'},
+  {path:'/es/dr-diego-bujanda',title:'Dr. Diego Bujanda, cirujano plástico',desc:'Trayectoria, formación y asociaciones del Dr. Diego Bujanda.',h1:true,alts:1,hreflang:true,schema:'Physician',reviewed:'2026-10-20'},
+  {path:'/es/tratamientos/rinoplastia',title:'Rinoplastía en Buenos Aires | Clínica Bujanda',desc:'',h1:true,alts:2,hreflang:false,schema:'MedicalProcedure',reviewed:''},
+  {path:'/es/taylor-made',title:'Taylor Made',desc:'Tratamientos de autor diseñados a medida de cada paciente, con evaluación individual y plan combinado.',h1:true,alts:0,hreflang:true,schema:'',reviewed:''},
+  {path:'/en/treatments/rhinoplasty',title:'Rhinoplasty in Buenos Aires | Clínica Bujanda',desc:'Rhinoplasty consultation with Dr. Diego Bujanda in Buenos Aires.',h1:true,alts:0,hreflang:true,schema:'MedicalProcedure',reviewed:''},
+  {path:'/es/tienda',title:'Signature Collection | Clínica Bujanda',desc:'Línea cosmética Signature diseñada por el Dr. Bujanda: Aurum, Persea y más.',h1:false,alts:3,hreflang:true,schema:'',reviewed:''}
+ ],
+ redirects:[['/tratamientos','/es/tratamientos'],['/nosotros','/es/dr-diego-bujanda'],['/taylor-made','/es/taylor-made'],['/shop-signature-collection','/es/tienda'],['/agende-una-cita','/es/reservar'],['/consulta-online','/es/reservar?tipo=video'],['/news-1','/es/notas'],['/post/reducción-de-papada-sin-cirugia','/es/notas/reduccion-de-papada-sin-cirugia']],
+ aiTests:[
+  {date:'2026-10-10',engine:'ChatGPT',q:'cirujano plástico en Belgrano',mentioned:false,note:'Ejemplo ficticio de registro'},
+  {date:'2026-10-10',engine:'Perplexity',q:'Sculptra Buenos Aires especialista',mentioned:true,note:'Ejemplo ficticio de registro'}
+ ],
+ notif:[
+  {at:'2026-10-21T09:14:00-03:00',ch:'email',to:'Tomás Ibarra',tpl:'pago_aprobado'},
+  {at:'2026-10-21T09:14:00-03:00',ch:'whatsapp',to:'Tomás Ibarra',tpl:'pago_aprobado'}
+ ],
+ audit:[
+  {at:'2026-10-21T10:02:00-03:00',who:'Secretaría',what:'Consultó estado de pagos'},
+  {at:'2026-10-20T18:40:00-03:00',who:'Dr. Bujanda',what:'Accedió a la ficha clínica de Valentina Rossi'}
+ ],
+ bk:{step:1,type:null,day:null,slot:null,policy:false},
+ hold:null, mp:null, proPrefs:{email:true,wa:true}, cancelPreview:null
+};}
+/* ===== Clínica Bujanda — demo SPA ===== */
+let S = mkState();
+S.blocked = ['2026-10-28T10:00:00-03:00','2026-10-28T11:00:00-03:00'];
+S.otherHolds = ['2026-10-26T15:00:00-03:00'];
+S.bio = {es:'Médico egresado de la Facultad de Medicina de la Universidad de Buenos Aires. Se formó en Cirugía General y luego en Cirugía Plástica, Reconstructiva y Reparadora en el Hospital Dr. Ignacio Pirovano, donde hoy es médico de planta y docente. Dirige su clínica privada en Buenos Aires.',en:'Graduated from the University of Buenos Aires School of Medicine. He trained in General Surgery and then in Plastic, Reconstructive and Repair Surgery at Hospital Dr. Ignacio Pirovano, where he is now a staff physician and teacher. He runs his private clinic in Buenos Aires.'};
+S.intakeSent = {};
+
+const TZ='America/Argentina/Buenos_Aires';
+const L=(es,en)=>S.lang==='es'?es:en;
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const loc=()=>S.lang==='es'?'es-AR':'en-US';
+const money=(n,c)=>(c==='USD'?'USD ':'$ ')+Number(n).toLocaleString(loc());
+const shortMoney=n=>n>=1e6?'$ '+(n/1e6).toLocaleString(loc(),{maximumFractionDigits:1})+' M':'$ '+Math.round(n/1e3)+' k';
+const toIso=d=>d.length<=10?d+'T12:00:00-03:00':d;
+const dt=(iso,o)=>new Date(toIso(iso)).toLocaleString(loc(),Object.assign({timeZone:TZ},o||{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}));
+const dd=iso=>dt(iso,{day:'numeric',month:'short',year:'numeric'});
+const hm=iso=>dt(iso,{hour:'2-digit',minute:'2-digit'});
+const ymd=t=>new Date(new Date(toIso(t)).getTime()-3*36e5).toISOString().slice(0,10);
+const P=id=>PATIENTS.find(p=>p.id===id)||{name:id};
+const D=id=>PROS.find(d=>d.id===id)||{name:id};
+const pname=s=>{const [es,en]=s.split('|');return S.lang==='es'?es:(en||es)};
+const W=id=>S.workshops.find(w=>w.id===id);
+const PAY=id=>S.pays.find(p=>p.id===id);
+const ME={patient:'p1',pro:'d1'};
+let uid=100; const nid=p=>p+(++uid);
+
+const ST={hold:['Horario reservado','Slot held','info'],pendiente_pago:['Pago pendiente','Payment pending','warn'],pagado:['Pagado · espera confirmación','Paid · awaiting confirmation','info'],confirmado:['Confirmado','Confirmed','ok'],reprogramar:['Nueva fecha propuesta','New date proposed','warn'],rechazado:['Rechazado por la clínica','Declined by the clinic','bad'],cancelado:['Cancelado','Cancelled','bad'],realizada:['Realizada','Completed','']};
+const PST={pending:['Pendiente','Pending','warn'],approved:['Aprobado','Approved','ok'],rejected:['Rechazado','Rejected','bad'],refund_requested:['Reembolso a autorizar','Refund to authorize','warn'],refunded:['Reembolsado','Refunded','info'],partial_refund:['Reembolso parcial','Partial refund','info']};
+const BST={enviado:['Enviado','Sent','info'],aceptado:['Aceptado','Accepted','ok'],aclaracion:['Aclaración solicitada','Clarification requested','warn'],rechazado:['Rechazado','Declined','bad']};
+const OST={pago_pendiente:['Pago pendiente','Payment pending','warn'],preparando:['En preparación','Preparing','info'],listo:['Listo · coordinar por WhatsApp','Ready · coordinate via WhatsApp','ok'],entregado:['Entregado','Delivered','']};
+const EST={pagado:['Inscripción confirmada','Enrollment confirmed','ok'],pago_pendiente:['Pago pendiente','Payment pending','warn'],verificacion:['Matrícula en verificación','License under review','info']};
+const chip=(k,m)=>{const s=(m||ST)[k]||[k,k,''];return `<span class="chip ${s[2]}">${L(s[0],s[1])}</span>`};
+const STAGES=[['Nueva consulta','New inquiry'],['Contacto pendiente','Contact pending'],['Contactado','Contacted'],['Evaluación solicitada','Evaluation requested'],['Evaluación agendada','Evaluation scheduled'],['Evaluación realizada','Evaluation done'],['Presupuesto enviado','Quote sent'],['Presupuesto aceptado','Quote accepted'],['Procedimiento programado','Procedure scheduled'],['Procedimiento realizado','Procedure done'],['Seguimiento administrativo','Admin follow-up'],['Caso cerrado','Closed']];
+const TPL={
+ pago_aprobado:['Recibimos tu pago. Te avisaremos cuando la clínica confirme tu turno.','We received your payment. We will let you know once the clinic confirms your appointment.'],
+ turno_confirmado:['Tu turno fue confirmado. Ver detalle en tu portal.','Your appointment is confirmed. See details in your portal.'],
+ turno_rechazado:['Hay una novedad sobre tu solicitud de turno. Ingresá a tu portal.','There is an update on your appointment request. Please sign in to your portal.'],
+ reprogramacion:['La clínica te propuso una nueva fecha. Respondé desde tu portal.','The clinic proposed a new date. Reply from your portal.'],
+ recordatorio:['Recordatorio: tenés un turno próximo. Detalles en tu portal.','Reminder: you have an upcoming appointment. Details in your portal.'],
+ cancelacion:['Registramos la cancelación de tu turno.','We recorded the cancellation of your appointment.'],
+ reembolso:['Se procesó un reembolso. Detalle en tu portal.','A refund was processed. Details in your portal.'],
+ nuevo_documento:['Tenés un nuevo documento en tu portal seguro.','You have a new document in your secure portal.'],
+ nuevo_mensaje:['Tenés un mensaje nuevo en tu portal seguro.','You have a new message in your secure portal.'],
+ nuevo_workshop:['Se publicó una nueva capacitación que coincide con tus intereses.','A new training matching your interests was published.'],
+ inscripcion:['Tu inscripción fue registrada.','Your enrollment was recorded.'],
+ compra:['Recibimos tu compra. Te escribiremos cuando esté lista.','We received your order. We will message you when it is ready.'],
+ pedido_preparado:['Tu pedido está listo. Coordinemos el retiro o envío por WhatsApp.','Your order is ready. Let\'s arrange pickup or delivery on WhatsApp.'],
+ presupuesto:['Tenés un nuevo presupuesto en tu portal.','You have a new quote in your portal.']
+};
+function notify(to,tpl,channels){(channels||['email','whatsapp']).forEach(ch=>S.notif.unshift({at:new Date().toISOString(),ch,to,tpl}))}
+function audit(what){S.audit.unshift({at:new Date().toISOString(),who:S.role==='surgeon'?'Dr. Bujanda':S.role==='secretary'?'Secretaría':S.role==='patient'?P(ME.patient).name:S.role==='pro'?D(ME.pro).name:'Visitante',what})}
+
+/* ---------- slots ---------- */
+function bizDays(n){const out=[];let t=new Date(toIso(ymd(NOW.toISOString()))).getTime();while(out.length<n){t+=864e5;const g=new Date(t-3*36e5).getUTCDay();if(g>0&&g<6)out.push(new Date(t-3*36e5).toISOString().slice(0,10))}return out}
+const slotsOf=day=>[10,11,12,13,14,15,16,17,18,19].map(h=>`${day}T${String(h).padStart(2,'0')}:00:00-03:00`);
+function slotState(iso){
+ if(S.blocked.includes(iso))return 'blocked';
+ if(S.otherHolds.includes(iso))return 'held';
+ if(S.appts.some(a=>a.start===iso&&!['cancelado','rechazado'].includes(a.status)))return 'taken';
+ return 'free';
+}
+
+/* ---------- placeholder art ---------- */
+const LINE='<svg viewBox="0 0 200 250" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><path d="M118 34c-22-6-46 6-52 30-4 14 0 26-4 36-3 8-12 14-10 20 2 5 10 4 12 8 1 4-4 7-2 11 2 3 8 2 8 6-1 6-2 14 6 18 9 4 22 0 30 6 6 5 6 18 8 30"/><path d="M142 60c10 18 10 44-2 66-8 14-6 30 4 44" /><path d="M60 236c20-30 60-44 100-40"/></svg>';
+const art=(v,cls,label)=>`<div class="art ${v||''} ${cls||''}" role="img" aria-label="${esc(label||L('Imagen provisional','Placeholder image'))}">${LINE}<span class="art-tag">${L('Imagen provisional · reemplazar por foto autorizada','Placeholder · replace with authorized photo')}</span></div>`;
+
+/* ---------- routing ---------- */
+const PUB=[['treatments','Tratamientos','Treatments'],['doctor','Dr. Bujanda','Dr. Bujanda'],['taylor','Taylor Made','Taylor Made'],['facilities','Instalaciones','The clinic'],['tourism','Turismo médico','Medical travel'],['shop','Signature Shop','Signature Shop'],['workshops','Workshops','Workshops'],['notes','Notas','Journal']];
+const isWS=()=>['patient','pro','admin'].includes(S.view);
+function go(v,sub){
+ if(v==='patient'&&S.role!=='patient'){S.after='patient';v='auth'}
+ if(v==='pro'&&S.role!=='pro'){S.after='pro';v='auth'}
+ if(v==='admin'&&!['surgeon','secretary'].includes(S.role)){S.modal={t:'roles'};render(true);return}
+ S.view=v;S.sub=sub||defaultSub(v);S.menu=false;render();
+}
+function defaultSub(v){return v==='patient'?'inicio':v==='pro'?'inicio':v==='admin'?(S.role==='secretary'?'tareas':'dashboard'):null}
+
+/* ---------- render ---------- */
+function render(keep){
+ const y=window.scrollY;
+ document.getElementById('app').innerHTML=strip()+header()+'<main id="main">'+view()+'</main>'+(isWS()?'':footer())+modal();
+ window.scrollTo(0,keep?y:0);
+ slider();
+}
+function strip(){
+ const rn={visitor:L('Visitante','Visitor'),patient:L('Paciente · Lucía Ferrer','Patient · Lucía Ferrer'),pro:L('Profesional · Dra. Ana Lorenzo','Professional · Dr. Ana Lorenzo'),surgeon:L('Cirujano · Dr. Bujanda','Surgeon · Dr. Bujanda'),secretary:L('Secretaría','Secretary')}[S.role];
+ return `<div class="demo-strip"><div class="wrap"><span>${L('DEMOSTRACIÓN · datos ficticios · sin cobros reales','DEMO · fictitious data · no real charges')} · <span class="mono">${L('Reloj demo','Demo clock')}: ${dt(NOW.toISOString())} BA</span></span><button data-act="roles">${L('Perfil','Profile')}: ${rn} ▾</button></div></div>`;
+}
+function header(){
+ const portal=S.role==='visitor'?L('Ingresar','Sign in'):S.role==='patient'||S.role==='pro'?L('Mi portal','My portal'):L('Backend','Back office');
+ const cartN=S.cart.reduce((a,c)=>a+c[1],0);
+ return `<header class="hdr"><div class="wrap">
+ <button class="logo" data-act="go" data-arg="home" aria-label="Clínica Bujanda"><b>BUJANDA</b><span>${L('Cirugía plástica · Buenos Aires','Plastic surgery · Buenos Aires')}</span></button>
+ <nav class="nav ${S.menu?'open':''}" aria-label="${L('Principal','Main')}">${PUB.map(([v,es,en])=>`<button data-act="go" data-arg="${v}" class="${S.view===v?'on':''}">${L(es,en)}</button>`).join('')}</nav>
+ <div class="hdr-tools">
+  <div class="lang" role="group" aria-label="Idioma / Language"><button data-act="lang" data-arg="es" class="${S.lang==='es'?'on':''}">ES</button><button data-act="lang" data-arg="en" class="${S.lang==='en'?'on':''}">EN</button></div>
+  ${cartN?`<button class="icon-btn" data-act="cart">${L('Carrito','Cart')} <span class="mono">${cartN}</span></button>`:''}
+  <button class="icon-btn hide-sm" data-act="portal">${portal}</button>
+  <button class="btn sm gold hide-sm" data-act="book">${L('Reservar','Book')}</button>
+  <button class="icon-btn menu-btn" data-act="menu" aria-expanded="${S.menu}">${L('Menú','Menu')}</button>
+ </div></div></header>`;
+}
+function view(){
+ return ({home,treatments,doctor,taylor,facilities,tourism,shop,workshops,notes,faq,auth,patient:patientWS,pro:proWS,admin:adminWS}[S.view]||home)();
+}
+
+
+function footer(){return `<footer class="foot"><div class="wrap"><div class="grid4">
+ <div><div class="logo" style="color:var(--inv)"><b>BUJANDA</b><span style="color:var(--gold-soft)">${L('Cirugía plástica','Plastic surgery')}</span></div><p style="margin-top:16px">${CLINIC.address}<br>${CLINIC.hours[S.lang]}</p></div>
+ <div><h4>${L('Clínica','Clinic')}</h4>${PUB.slice(0,5).map(([v,es,en])=>`<button data-act="go" data-arg="${v}">${L(es,en)}</button>`).join('')}<button data-act="go" data-arg="faq">${L('Preguntas frecuentes','FAQ')}</button></div>
+ <div><h4>${L('Portales','Portals')}</h4><button data-act="go" data-arg="patient">${L('Portal del paciente','Patient portal')}</button><button data-act="go" data-arg="pro">${L('Portal de profesionales','Professional portal')}</button><button data-act="roles">${L('Backend (demo)','Back office (demo)')}</button><button data-act="go" data-arg="shop">Signature Shop</button></div>
+ <div><h4>${L('Contacto','Contact')}</h4><p><span class="mono">${CLINIC.phone}</span><br>WhatsApp <span class="mono">${CLINIC.wa}</span><br><span class="mono">${CLINIC.email}</span></p><p style="margin-top:10px"><a href="${CLINIC.ig}" target="_blank" rel="noopener">Instagram</a> · <a href="${CLINIC.yt}" target="_blank" rel="noopener">YouTube</a> · <a href="${CLINIC.fb}" target="_blank" rel="noopener">Facebook</a></p></div>
+ </div><div class="legal"><span>© 2026 Dr. Diego Bujanda · Clínica Bujanda · ${CLINIC.mn}</span><span>${L('Director médico: Dr. Diego Bujanda. La información del sitio no reemplaza la consulta médica.','Medical director: Dr. Diego Bujanda. Site information does not replace a medical consultation.')}</span></div></div></footer>`}
+
+/* ---------- HOME ---------- */
+const SLIDES=()=>[
+ {k:L('Diseño de adentro hacia afuera','Designed from within'),h:L('El verdadero cambio es <em>diseñar</em> de adentro hacia afuera','True change is <em>designed</em> from the inside out'),p:L('Cirugía plástica y medicina estética que parten de tu anatomía, tu salud y tu historia, no de una moda.','Plastic surgery and aesthetic medicine that start from your anatomy, your health and your story, not from a trend.'),v:''},
+ {k:L('Individualidad','Individuality'),h:L('El desafío es resaltar la <em>individualidad</em>','The challenge is to enhance <em>individuality</em>'),p:L('Rechazamos los rostros y cuerpos en serie. Cada plan se diseña para una sola persona.','We reject mass-produced faces and bodies. Every plan is designed for one person.'),v:'v2'},
+ {k:L('Salud que se ve','Health you can see'),h:L('Salud que se ve <em>&amp;</em> se disfruta','Health you can see <em>&amp;</em> enjoy'),p:L('Técnicas actuales, seguimiento cercano y un espacio pensado para el cuidado del paciente.','Current techniques, close follow-up and a space designed around patient care.'),v:'v3'}
+];
+function heroInner(){
+ const s=SLIDES()[S.slide];
+ return `<div class="hero-grid">
+ <div class="hero-copy slide-anim" aria-live="polite">
+  <span class="eyebrow">${s.k}</span>
+  <h1>${s.h}</h1>
+  <p>${s.p}</p>
+  <div class="hero-ctas"><button class="btn" data-act="book">${L('Reservar consulta','Book a consultation')}</button><button class="btn ghost" data-act="go" data-arg="treatments">${L('Ver tratamientos','View treatments')}</button></div>
+  <div class="slide-ctrl"><button data-act="slide" data-arg="-1" aria-label="${L('Anterior','Previous')}">←</button><span class="count">0${S.slide+1} / 0${SLIDES().length}</span><div class="bar"><i></i></div><button data-act="slide" data-arg="1" aria-label="${L('Siguiente','Next')}">→</button></div>
+ </div>
+ <div class="hero-art slide-anim">${art(s.v,'arch')}<div class="badge-float"><b>${CLINIC.doctor}</b>${CLINIC.mn} · ${L('Especialista en Cirugía Plástica, Reconstructiva y Reparadora','Board-certified in Plastic, Reconstructive and Repair Surgery')}</div></div>
+ </div>`;
+}
+let slideTimer=null;
+function slider(){clearInterval(slideTimer);if(S.view!=='home'||matchMedia('(prefers-reduced-motion: reduce)').matches)return;slideTimer=setInterval(()=>{S.slide=(S.slide+1)%SLIDES().length;const h=document.getElementById('hero');if(h)h.innerHTML='<div class="wrap">'+heroInner()+'</div>'},7000)}
+function home(){
+ const q=PROC.filter(p=>p.cat==='q').reduce((a,p)=>a+p.items.length,0), nq=PROC.filter(p=>p.cat==='nq').reduce((a,p)=>a+p.items.length,0);
+ const tms=S.testimonials.filter(t=>t.published);
+ return `<section class="hero" id="hero"><div class="wrap">${heroInner()}</div></section>
+ <section class="band alt"><div class="wrap grid2">
+  <div><span class="eyebrow">Clínica Bujanda</span><p class="quote" style="margin-top:18px">${L('“Cada persona es única, y también lo es el cuidado de su salud.”','“Every person is unique, and so is the care of their health.”')}</p></div>
+  <div class="prose"><p>${L('Nacimos para alejar a la cirugía plástica de la idea de que produce los mismos rostros y cuerpos en todas las personas. Muchas prácticas repiten técnicas y modas sin considerar la singularidad de cada paciente.','We set out to move plastic surgery away from the idea that it produces the same faces and bodies in everyone. Many practices repeat techniques and trends without considering each patient\'s singularity.')}</p><p>${L('En Clínica Bujanda cada indicación surge de una evaluación médica individual, con foco en la armonía, la salud y resultados naturales.','At Clínica Bujanda every recommendation comes from an individual medical evaluation, focused on harmony, health and natural results.')}</p></div>
+ </div></section>
+ <section class="band"><div class="wrap">
+  <div class="sec-head"><div><span class="eyebrow">${L('Tratamientos','Treatments')}</span><h2>${L('Un catálogo completo, una sola mirada','A complete catalogue, one point of view')}</h2></div><button class="link" data-act="go" data-arg="treatments">${L('Ver catálogo','View catalogue')}</button></div>
+  <div class="grid3">
+   <button class="tile" data-act="treat" data-arg="q"><span class="arrow">${q} ${L('procedimientos','procedures')} →</span><h3>${L('Quirúrgicos','Surgical')}</h3><p class="muted small">${L('Rostro, mamas, contorno corporal, nariz, párpados, intimidad y más.','Face, breast, body contouring, nose, eyelids, intimate and more.')}</p></button>
+   <button class="tile" data-act="treat" data-arg="nq"><span class="arrow">${nq} ${L('procedimientos','procedures')} →</span><h3>${L('No quirúrgicos','Non-surgical')}</h3><p class="muted small">${L('Toxina botulínica, rellenos, bioestimulación, piel, plasma y bienestar.','Botulinum toxin, fillers, biostimulation, skin, plasma and wellness.')}</p></button>
+   <button class="tile" data-act="go" data-arg="taylor"><span class="arrow">${L('Tratamientos de autor','Signature treatments')} →</span><h3>Taylor Made</h3><p class="muted small">${L('Planes combinados y diseñados a medida tras un estudio exhaustivo.','Combined, made-to-measure plans after a thorough assessment.')}</p></button>
+  </div>
+ </div></section>
+ <section class="band alt"><div class="wrap grid2">
+  <div style="max-width:420px">${art('v2','arch',L('Retrato del Dr. Bujanda (provisional)','Portrait of Dr. Bujanda (placeholder)'))}</div>
+  <div class="prose"><span class="eyebrow">${L('El cirujano','The surgeon')}</span><h2 style="font-size:clamp(2rem,4vw,3.2rem)">${CLINIC.doctor}</h2><p>${S.bio[S.lang]}</p>
+   <div class="chips"><span class="chip gold">${CLINIC.mn}</span><span class="chip">UBA</span><span class="chip">Hospital Pirovano</span><span class="chip">SACPER</span><span class="chip">AMA</span><span class="chip">${L('Speaker oficial Sculptra','Official Sculptra speaker')}</span></div>
+   <div><button class="link" data-act="go" data-arg="doctor">${L('Trayectoria completa','Full background')}</button></div></div>
+ </div></section>
+ <section class="band ink"><div class="wrap grid2">
+  <div><span class="eyebrow">Taylor Made</span><h2 style="font-size:clamp(2.4rem,5vw,4.2rem);margin-top:14px;font-style:italic">${L('Hecho a tu medida, por las mejores manos','Made to measure, by the best hands')}</h2></div>
+  <div class="prose"><p class="muted">${L('Un área de la clínica dedicada a resaltar la belleza natural e individual. Estudio exhaustivo, técnicas médicas y quirúrgicas combinadas y un código ético que guía cada decisión.','An area of the clinic devoted to enhancing natural, individual beauty. A thorough assessment, combined medical and surgical techniques and an ethical code guiding every decision.')}</p><div><button class="btn gold" data-act="go" data-arg="taylor">${L('Conocer Taylor Made','Discover Taylor Made')}</button></div></div>
+ </div></section>
+ <section class="band"><div class="wrap grid2" style="align-items:stretch">
+  <div class="card"><span class="eyebrow">${L('Turismo médico','Medical travel')}</span><h3 style="font-size:1.9rem">${L('Si venís desde otra provincia o país, te acompañamos','Travelling from another province or country? We support you')}</h3><p class="muted">${L('Itinerario de turnos y controles, información práctica de Buenos Aires y una guía del barrio administrada por la clínica.','Appointment and follow-up itinerary, practical Buenos Aires information and a neighbourhood guide curated by the clinic.')}</p><div><button class="link" data-act="go" data-arg="tourism">${L('Planificar mi viaje','Plan my trip')}</button></div></div>
+  <div class="card"><span class="eyebrow">${L('Formación profesional','Professional training')}</span><h3 style="font-size:1.9rem">${L('Workshops para médicos','Workshops for physicians')}</h3><p class="muted">${L('Capacitaciones presenciales, híbridas y online con el Dr. Bujanda. Portal exclusivo para profesionales con verificación de matrícula.','In-person, hybrid and online training with Dr. Bujanda. Exclusive portal for professionals with license verification.')}</p><div><button class="link" data-act="go" data-arg="workshops">${L('Ver capacitaciones','View trainings')}</button></div></div>
+ </div></section>
+ <section class="band alt"><div class="wrap">
+  <div class="sec-head"><div><span class="eyebrow">Signature Collection</span><h2>${L('Diseñada médicamente por el Dr. Bujanda','Medically designed by Dr. Bujanda')}</h2></div><button class="link" data-act="go" data-arg="shop">${L('Ir a la tienda','Go to shop')}</button></div>
+  <div class="grid3">${S.products.filter(p=>p.active).slice(0,3).map(prodCard).join('')}</div>
+ </div></section>
+ <section class="band"><div class="wrap">
+  <div class="sec-head"><div><span class="eyebrow">${L('Experiencias','Experiences')}</span><h2>${L('Lo que cuentan nuestros pacientes','What our patients say')}</h2></div><span class="chip warn">${L('Testimonios ficticios de demostración','Fictitious demo testimonials')}</span></div>
+  <div class="grid3">${tms.map(t=>`<figure class="card" style="margin:0"><p class="quote" style="font-size:1.35rem">“${t.text[S.lang]}”</p><figcaption class="muted small">${t.by} · ${L('consentimiento registrado','consent on file')}</figcaption></figure>`).join('')}</div>
+ </div></section>
+ <section class="band alt"><div class="wrap grid2" style="align-items:start">
+  <div><span class="eyebrow">${L('Notas y entrevistas','Notes and interviews')}</span><h2 style="font-size:clamp(2rem,4vw,3rem);margin:12px 0 24px">${L('Desde la consulta','From the practice')}</h2>${noteList(3)}<div style="margin-top:18px"><button class="link" data-act="go" data-arg="notes">${L('Todas las notas','All notes')}</button></div></div>
+  <div class="faq"><span class="eyebrow">${L('Preguntas frecuentes','FAQ')}</span><div style="margin-top:12px">${FAQ().slice(0,3).flatMap(c=>c.q.slice(0,1)).map(([q,a])=>`<details><summary>${q}</summary><p>${a}</p></details>`).join('')}</div><div style="margin-top:18px"><button class="link" data-act="go" data-arg="faq">${L('Ver todas','See all')}</button></div></div>
+ </div></section>
+ ${contactBand()}`;
+}
+function contactBand(){return `<section class="band"><div class="wrap grid2">
+ <div class="prose"><span class="eyebrow">${L('Contacto','Contact')}</span><h2 style="font-size:clamp(2rem,4vw,3rem)">${L('Te esperamos en la clínica','We look forward to seeing you')}</h2>
+ <p><b style="color:var(--fg);font-weight:500">${CLINIC.address}</b><br>${CLINIC.hours[S.lang]}</p>
+ <p>${L('Teléfono','Phone')}: <span class="mono">${CLINIC.phone}</span><br>WhatsApp: <span class="mono">${CLINIC.wa}</span><br>Email: <span class="mono">${CLINIC.email}</span></p>
+ <div class="row"><a class="btn" href="${CLINIC.waUrl}" target="_blank" rel="noopener">WhatsApp</a><button class="btn ghost" data-act="go" data-arg="facilities">${L('Cómo llegar','Directions')}</button></div></div>
+ ${mapSvg()}</div></section>`}
+function mapSvg(){return `<div><div class="mapbox"><svg viewBox="0 0 400 250" role="img" aria-label="${L('Mapa esquemático','Schematic map')}">
+ <rect width="400" height="250" fill="var(--surface)"/>
+ ${[40,100,160,220].map(y=>`<line x1="0" y1="${y}" x2="400" y2="${y-30}" stroke="var(--line)" stroke-width="6"/>`).join('')}
+ ${[60,140,220,300,370].map(x=>`<line x1="${x}" y1="0" x2="${x+40}" y2="250" stroke="var(--line)" stroke-width="6"/>`).join('')}
+ <line x1="0" y1="200" x2="400" y2="40" stroke="var(--sand)" stroke-width="16"/>
+ <text x="22" y="186" fill="var(--muted)" font-size="11" font-family="Jost,sans-serif" transform="rotate(-21.8 22 186)" letter-spacing="2">AV. CABILDO</text>
+ <circle cx="214" cy="114" r="16" fill="var(--gold)" opacity=".18"/><circle cx="214" cy="114" r="6" fill="var(--gold)"/>
+ <text x="228" y="104" fill="var(--fg)" font-size="12" font-family="Jost,sans-serif">Clínica Bujanda</text></svg></div>
+ <p class="tiny muted" style="margin-top:8px">${L('Mapa esquemático, no a escala. En producción: mapa interactivo con la dirección verificada.','Schematic map, not to scale. In production: interactive map with the verified address.')} <a href="${CLINIC.maps}" target="_blank" rel="noopener">${L('Abrir en Google Maps','Open in Google Maps')}</a></p></div>`}
+
+/* ---------- TREATMENTS ---------- */
+function treatments(){
+ const list=PROC.filter(p=>(S.tFilter==='all'||p.cat===S.tFilter)&&(S.tSex==='all'||p.sex===S.tSex||(p.sex==='u'&&S.tSex!=='all')));
+ const f=(k,es,en,key)=>`<button data-act="tf" data-arg="${key}:${k}" class="${S[key]===k?'on':''}">${L(es,en)}</button>`;
+ return `<section class="band"><div class="wrap">
+ <div class="sec-head"><div><span class="eyebrow">${L('Catálogo','Catalogue')}</span><h2>${L('Tratamientos','Treatments')}</h2></div><p class="muted">${L('Cada ficha resume información general. La indicación siempre surge de una consulta médica.','Each page summarizes general information. Any recommendation always comes from a medical consultation.')}</p></div>
+ <div class="filters">${f('all','Todos','All','tFilter')}${f('q','Quirúrgicos','Surgical','tFilter')}${f('nq','No quirúrgicos','Non-surgical','tFilter')}<span style="width:12px"></span>${f('all','Para todos','Everyone','tSex')}${f('f','Orientados a mujeres','Mainly women','tSex')}${f('m','Orientados a hombres','Mainly men','tSex')}</div>
+ <div class="notice" style="margin-bottom:24px"><b>${L('Clasificación corregida.','Classification fixed.')}</b> ${L('En el sitio actual varios procedimientos aparecían en la categoría equivocada (por ejemplo, ginecomastía en “Femenino”). Las categorías son orientativas: cualquier paciente puede consultar por el procedimiento adecuado a su situación.','On the current site several procedures were filed under the wrong category (e.g. gynecomastia under “Female”). Categories are a guide only: any patient may ask about the procedure that suits their situation.')}</div>
+ ${list.map(g=>`<div class="tgroup"><div><span class="eyebrow">${g.cat==='q'?L('Quirúrgico','Surgical'):L('No quirúrgico','Non-surgical')}${g.sex!=='u'?' · '+(g.sex==='f'?L('Mujeres','Women'):L('Hombres','Men')):''}</span><h3>${L(g.es,g.en)}</h3></div><ul>${g.items.map(i=>`<li><button data-act="proc" data-arg="${esc(g.g+'::'+i)}">${pname(i)}<span>${FLAGSHIP[i.split('|')[0]]?L('ficha','page'):'→'}</span></button></li>`).join('')}</ul></div>`).join('')}
+ </div></section>`;
+}
+function procModal(arg){
+ const [gid,item]=arg.split('::');const g=PROC.find(p=>p.g===gid);const es=item.split('|')[0];const fl=FLAGSHIP[es];const q=g.cat==='q';
+ const sec=(t,x)=>`<div><span class="eyebrow">${t}</span><p class="muted" style="margin-top:6px">${x}</p></div>`;
+ return `<div class="modal-h"><div><span class="eyebrow">${L(g.es,g.en)} · ${q?L('Quirúrgico','Surgical'):L('No quirúrgico','Non-surgical')}</span><h2 style="margin-top:8px">${pname(item)}</h2></div><button class="x" data-act="close" aria-label="${L('Cerrar','Close')}">✕</button></div>
+ <div class="chips"><span class="chip warn">${L('Borrador · pendiente de aprobación médica','Draft · pending medical approval')}</span><span class="chip">/${S.lang}/${L('tratamientos','treatments')}/${pname(item).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')}</span></div>
+ ${art('v3','',L('Fotografía autorizada pendiente','Authorized photo pending')).replace('class="art','style="aspect-ratio:16/7" class="art')}
+ ${sec(L('Descripción','Description'),fl?fl[S.lang]:L('Descripción a redactar y validar por el Dr. Bujanda.','Description to be written and approved by Dr. Bujanda.'))}
+ <div class="grid2" style="align-items:start;gap:18px">
+ ${sec(L('Objetivos','Goals'),L('Lograr un resultado armónico y acorde a la anatomía y las expectativas de cada paciente.','Achieve a harmonious result suited to each patient\'s anatomy and expectations.'))}
+ ${sec(L('Indicaciones generales','General indications'),L('Se definen en la evaluación médica, considerando antecedentes, salud general y objetivos.','Defined during the medical evaluation, considering history, general health and goals.'))}
+ ${sec(L('El procedimiento','The procedure'),q?L('Técnica, tipo de anestesia y duración se determinan en consulta según cada caso.','Technique, anaesthesia and duration are decided in consultation for each case.'):L('Suele realizarse en consultorio; la evaluación previa confirma si es adecuado para vos.','Usually performed in the office; the prior evaluation confirms whether it suits you.'))}
+ ${sec(L('Recuperación orientativa','Indicative recovery'),L('Variable según la técnica y la persona. El médico indica plazos de reposo, actividad y controles.','Varies by technique and person. The doctor sets rest, activity and follow-up timelines.'))}
+ ${sec(L('Cuidados generales','General care'),L('Seguir las indicaciones escritas del equipo médico y asistir a todos los controles.','Follow the medical team\'s written instructions and attend every follow-up.'))}
+ ${sec(L('Riesgos y limitaciones','Risks and limitations'),L('Todo procedimiento médico implica riesgos generales y específicos, que se explican en consulta y en el consentimiento informado.','Every medical procedure carries general and specific risks, explained in consultation and in the informed consent.'))}
+ </div>
+ <div class="faq"><details><summary>${L('¿Necesito una evaluación previa?','Do I need a prior evaluation?')}</summary><p>${L('Sí. Toda indicación surge de una consulta médica presencial o por videollamada.','Yes. Every recommendation comes from an in-person or video consultation.')}</p></details></div>
+ <div class="row"><button class="btn" data-act="book" data-arg="${esc(es)}">${L('Solicitar consulta','Request a consultation')}</button><span class="tiny muted">${L('Contenido clínico sujeto a revisión del Dr. Bujanda antes de publicar.','Clinical content subject to Dr. Bujanda\'s review before publishing.')}</span></div>`;
+}
+
+/* ---------- DOCTOR ---------- */
+function doctor(){
+ const items=[
+  [L('Formación','Education'),L('Médico egresado de la Facultad de Medicina, Universidad de Buenos Aires.','Physician, University of Buenos Aires School of Medicine.')],
+  [L('Residencia','Residency'),L('Cirugía General y especialidad en Cirugía Plástica, Reconstructiva y Reparadora en el Hospital Dr. Ignacio Pirovano.','General Surgery and specialization in Plastic, Reconstructive and Repair Surgery at Hospital Dr. Ignacio Pirovano.')],
+  [L('Certificación','Certification'),L('Especialista re-certificado en Cirugía Plástica, Reconstructiva y Reparadora (Ministerio de Salud, UBA).','Re-certified specialist in Plastic, Reconstructive and Repair Surgery (Ministry of Health, UBA).')],
+  [L('Diplomaturas','Diplomas'),L('España, 2008 (Comunidad Científica Europea) y Colombia, 2011.','Spain, 2008 (European Scientific Community) and Colombia, 2011.')],
+  [L('Actualidad','Current role'),L('Médico de planta, División Cirugía Plástica del Hospital Pirovano, con labor docente. Director de Clínica Bujanda.','Staff physician, Plastic Surgery Division, Hospital Pirovano, with teaching duties. Director of Clínica Bujanda.')],
+  [L('Asociaciones','Memberships'),L('Miembro titular de la Asociación Médica Argentina (AMA). Miembro de SACPER, SCPBA y ACPBA. Comité de Tumores del Hospital Pirovano.','Full member of the Argentine Medical Association (AMA). Member of SACPER, SCPBA and ACPBA. Tumour Committee, Hospital Pirovano.')],
+  [L('Formador','Trainer'),L('Representante y Speaker oficial de Sculptra designado por Galderma para Argentina.','Official Sculptra representative and speaker appointed by Galderma for Argentina.')]
+ ];
+ return `<section class="band"><div class="wrap grid2" style="align-items:start">
+ <div style="position:sticky;top:110px;max-width:440px">${art('v2','arch',L('Retrato profesional (provisional)','Professional portrait (placeholder)'))}</div>
+ <div class="prose" style="max-width:none"><span class="eyebrow">${L('Perfil médico','Medical profile')}</span><h2 style="font-size:clamp(2.4rem,5vw,4rem)">${CLINIC.doctor}</h2><span class="chip gold" style="justify-self:start">${L('Matrícula nacional','National license')} ${CLINIC.mn}</span>
+ <p>${S.bio[S.lang]}</p>
+ <div class="notice"><b>${L('Fuente:','Source:')}</b> ${L('datos tomados del sitio actual. Antes de publicar, se validan con documentación del médico. Editables desde el backend.','data taken from the current website. Before publishing, they are validated against the doctor\'s documents. Editable from the back office.')}</div>
+ <div>${items.map(([k,v])=>`<div class="list-row" style="align-items:flex-start"><span class="eyebrow" style="min-width:140px">${k}</span><p style="flex:1;min-width:220px">${v}</p></div>`).join('')}</div>
+ <div class="list-row"><span class="eyebrow">${L('Congresos y publicaciones','Congresses and publications')}</span><span class="chip warn">${L('Pendiente de carga detallada','Detailed list pending')}</span></div>
+ <p class="quote" style="font-size:1.4rem;margin-top:12px">${L('“Practica activamente la vida sana, el deporte y la meditación.”','“He actively practices healthy living, sport and meditation.”')}</p>
+ <div class="row"><button class="btn" data-act="book">${L('Reservar consulta','Book a consultation')}</button></div></div>
+ </div></section>`;
+}
+
+/* ---------- TAYLOR MADE ---------- */
+function taylor(){
+ const steps=[[L('Escucha','Listening'),L('Una primera conversación sobre tu historia, tu salud y lo que buscás.','A first conversation about your story, your health and what you seek.')],[L('Estudio exhaustivo','Thorough assessment'),L('Evaluación clínica individual para conocer tu anatomía y antecedentes.','Individual clinical evaluation of your anatomy and history.')],[L('Plan de autor','Signature plan'),L('Combinación de técnicas médicas y quirúrgicas cuando corresponde, en etapas.','Combined medical and surgical techniques when appropriate, in stages.')],[L('Seguimiento','Follow-up'),L('Controles y ajustes del plan con acompañamiento cercano.','Check-ups and plan adjustments with close support.')]];
+ return `<section class="band ink"><div class="wrap">
+ <span class="eyebrow">Taylor Made · ${L('Hecho a medida','Made to measure')}</span>
+ <h2 style="font-size:clamp(3rem,8vw,6.8rem);font-style:italic;margin:18px 0 26px;line-height:.95">${L('Tratamientos de autor','Signature treatments')}</h2>
+ <p class="muted" style="max-width:60ch;font-size:1.1rem">${L('Un área de la clínica dedicada a resaltar la belleza natural e individual de cada paciente. Ya sea para un cambio estético, de salud, preventivo o ambos, el plan se diseña a partir de un estudio exhaustivo y de nuestro código ético.','An area of the clinic devoted to enhancing each patient\'s natural, individual beauty. Whether for an aesthetic, health or preventive change, or all of them, the plan is designed from a thorough assessment and our ethical code.')}</p>
+ <div class="grid4" style="margin-top:56px">${steps.map(([t,d],i)=>`<div style="border-top:1px solid color-mix(in srgb,var(--inv) 25%,transparent);padding-top:18px;display:grid;gap:8px"><span class="mono" style="color:var(--gold-soft)">${L('Etapa','Stage')} ${i+1}</span><h3 style="font-size:1.6rem">${t}</h3><p class="muted small">${d}</p></div>`).join('')}</div>
+ </div></section>
+ <section class="band"><div class="wrap grid2" style="align-items:start">
+  <div class="prose"><span class="eyebrow">${L('Beneficios de planificar','Why plan ahead')}</span><h2 style="font-size:clamp(2rem,4vw,3rem)">${L('Menos intervenciones aisladas, más coherencia','Fewer isolated procedures, more coherence')}</h2><p>${L('Un plan integral permite ordenar prioridades, combinar tratamientos cuando es seguro hacerlo y sostener resultados en el tiempo.','A comprehensive plan sets priorities, combines treatments when it is safe and sustains results over time.')}</p></div>
+  <form class="card" data-form="taylor" style="gap:14px"><h3 style="font-size:1.6rem">${L('Solicitar evaluación Taylor Made','Request a Taylor Made evaluation')}</h3>
+   <div class="field"><label for="tm-name">${L('Nombre','Name')}</label><input id="tm-name" required placeholder="${L('Tu nombre','Your name')}"></div>
+   <div class="field"><label for="tm-goal">${L('¿Qué te gustaría trabajar?','What would you like to address?')}</label><select id="tm-goal"><option>${L('Rostro','Face')}</option><option>${L('Cuerpo','Body')}</option><option>${L('Piel','Skin')}</option><option>${L('Plan integral','Comprehensive plan')}</option></select></div>
+   <div class="field"><label for="tm-ch">${L('Preferencia de contacto','Contact preference')}</label><select id="tm-ch"><option>WhatsApp</option><option>Email</option></select></div>
+   <p class="tiny muted">${L('No incluyas datos médicos en este formulario. Se registra como oportunidad comercial, separada de la historia clínica.','Do not include medical data in this form. It is recorded as a sales opportunity, separate from clinical records.')}</p>
+   <button class="btn" type="submit">${L('Enviar solicitud','Send request')}</button></form>
+ </div></section>`;
+}
+
+/* ---------- FACILITIES ---------- */
+function facilities(){
+ return `<section class="band"><div class="wrap">
+ <div class="sec-head"><div><span class="eyebrow">${L('Instalaciones','The clinic')}</span><h2>${L('Un espacio vital y relajado para el cuidado del paciente','A calm, vital space for patient care')}</h2></div><p class="muted">${L('Elegir cuidarse es un mimo. Trabajamos para sumar avances médicos y mejorar la experiencia en cada instancia.','Choosing self-care is a treat. We work to bring in medical advances and improve the experience at every step.')}</p></div>
+ <div class="grid3">${[['',L('Recepción','Reception')],['v2',L('Consultorio','Consultation room')],['v3',L('Sala de procedimientos','Procedure room')]].map(([v,t])=>`<div style="display:grid;gap:10px">${art(v,'',t).replace('class="art','style="aspect-ratio:4/5" class="art')}<span class="eyebrow">${t}</span></div>`).join('')}</div>
+ </div></section>
+ <section class="band alt"><div class="wrap grid2" style="align-items:start">
+ <div class="prose" style="max-width:none"><span class="eyebrow">${L('Cómo llegar','Getting here')}</span><h2 style="font-size:clamp(2rem,4vw,3rem)">${CLINIC.address}</h2>
+ <div class="notice"><b>${L('Verificación pendiente.','Pending verification.')}</b> ${L('Dirección tomada del sitio actual. Antes de publicar mapa, distancias y barrio (Belgrano), se confirma la ubicación exacta con la clínica.','Address taken from the current website. Before publishing the map, distances and neighbourhood (Belgrano), the exact location is confirmed with the clinic.')}</div>
+ <div class="list-row"><span class="eyebrow">${L('Horario','Hours')}</span><span>${CLINIC.hours[S.lang]}</span></div>
+ <div class="list-row"><span class="eyebrow">Subte</span><span style="max-width:40ch">${L('La línea D circula bajo Av. Cabildo. Estación más cercana: se confirma con la dirección verificada.','Line D runs under Av. Cabildo. Nearest station: confirmed with the verified address.')}</span></div>
+ <div class="list-row"><span class="eyebrow">${L('Colectivos','Buses')}</span><span style="max-width:40ch">${L('Varias líneas recorren Av. Cabildo. Listado a cargar desde el backend.','Several lines run along Av. Cabildo. List to be loaded from the back office.')}</span></div>
+ <div class="list-row"><span class="eyebrow">${L('Estacionamiento','Parking')}</span><span class="chip warn">${L('A cargar desde el backend','To be loaded from back office')}</span></div>
+ <div class="list-row"><span class="eyebrow">${L('Acceso','Access')}</span><span style="max-width:40ch">${L('2.º piso, departamento A. Indicaciones de ingreso al edificio a confirmar.','2nd floor, unit A. Building entry instructions to be confirmed.')}</span></div>
+ <div class="row" style="margin-top:12px"><a class="btn" href="${CLINIC.waUrl}" target="_blank" rel="noopener">WhatsApp ${CLINIC.wa}</a></div></div>
+ ${mapSvg()}
+ </div></section>`;
+}
+
+/* ---------- TOURISM ---------- */
+function tourism(){
+ const verified=(t,d,src)=>`<div class="card"><div class="row between"><h3 style="font-size:1.3rem">${t}</h3><span class="chip">${src}</span></div><p class="muted small">${d}</p></div>`;
+ return `<section class="band"><div class="wrap">
+ <div class="sec-head"><div><span class="eyebrow">${L('Turismo médico','Medical travel')}</span><h2>${L('Tu estadía en Buenos Aires, acompañada','Your stay in Buenos Aires, supported')}</h2></div><p class="muted">${L('Para pacientes que viajan desde otras provincias o países. Foco en Belgrano y zonas próximas. No gestionamos pasajes aéreos.','For patients travelling from other provinces or countries. Focus on Belgrano and nearby areas. We do not handle flights.')}</p></div>
+ <div class="notice" style="margin-bottom:28px"><b>${L('Información turística, no indicación médica.','Tourist information, not medical advice.')}</b> ${L('Las actividades sugeridas no implican autorización para realizarlas durante la recuperación. Consultá siempre con tu cirujano.','Suggested activities do not imply clearance to do them during recovery. Always check with your surgeon.')}</div>
+ <h3 style="font-size:1.8rem;margin-bottom:16px">${L('Alojamiento y gastronomía','Accommodation and dining')}</h3>
+ <div class="grid3" style="margin-bottom:44px">
+  <div class="card"><span class="eyebrow">${L('Cómo se publica','How it works')}</span><p class="muted small">${L('Cada hotel, apartamento, restaurante, farmacia o supermercado se carga desde el backend con enlace a su sitio oficial, distancia verificada y fecha de revisión. No inventamos establecimientos, precios ni disponibilidad.','Each hotel, apartment, restaurant, pharmacy or supermarket is added from the back office with a link to its official site, verified distance and review date. We never invent places, prices or availability.')}</p></div>
+  <div class="card"><span class="eyebrow">${L('Filtros previstos','Planned filters')}</span><div class="chips"><span class="chip">${L('Hoteles','Hotels')}</span><span class="chip">${L('Temporarios','Short stays')}</span><span class="chip">${L('Por presupuesto','By budget')}</span><span class="chip">${L('Comida saludable','Healthy food')}</span><span class="chip">Delivery</span><span class="chip">${L('Farmacias','Pharmacies')}</span></div></div>
+  <div class="card"><span class="eyebrow">${L('Estado','Status')}</span><p class="muted small">${L('0 establecimientos verificados cargados. La clínica completa el listado antes del lanzamiento.','0 verified places loaded. The clinic completes the list before launch.')}</p><span class="chip warn" style="justify-self:start">${L('Pendiente de curaduría','Curation pending')}</span></div>
+ </div>
+ <h3 style="font-size:1.8rem;margin-bottom:16px">${L('Información práctica','Practical information')}</h3>
+ <div class="grid3" style="margin-bottom:44px">
+  ${verified(L('Emergencias','Emergencies'),L('SAME (emergencias médicas en CABA): 107 · Policía: 911 · Bomberos: 100.','SAME (medical emergencies in Buenos Aires City): 107 · Police: 911 · Fire: 100.'),L('Fuente oficial a enlazar','Official source to link'))}
+  ${verified('SUBE',L('Tarjeta para viajar en colectivo, subte y tren. Se compra y carga en puntos habilitados y estaciones.','Card for buses, subway and trains. Bought and topped up at authorized outlets and stations.'),L('Verificar en fuente oficial','Verify with official source'))}
+  ${verified(L('Medios de pago','Payments'),L('Tarjetas, transferencias, billeteras virtuales y efectivo. Cambiá moneda solo en bancos y casas de cambio habilitadas.','Cards, transfers, digital wallets and cash. Exchange currency only at banks and licensed exchange houses.'),L('Revisión periódica','Periodic review'))}
+  ${verified(L('Movilidad','Getting around'),L('Taxis, radiotaxis y aplicaciones de movilidad. Evitá vehículos sin identificación.','Taxis, radio taxis and ride-hailing apps. Avoid unmarked vehicles.'),L('Revisión periódica','Periodic review'))}
+  ${verified(L('Conectividad','Connectivity'),L('Podés adquirir un chip prepago local o usar roaming. Muchos cafés ofrecen wifi.','You can buy a local prepaid SIM or use roaming. Many cafés offer wifi.'),L('Revisión periódica','Periodic review'))}
+  ${verified(L('Seguridad','Safety'),L('Usá el celular con discreción en la vía pública y preferí traslados registrados por la noche.','Use your phone discreetly on the street and prefer booked rides at night.'),L('Revisión periódica','Periodic review'))}
+ </div>
+ <h3 style="font-size:1.8rem;margin-bottom:16px">${L('Para conocer en Belgrano','Things to see in Belgrano')}</h3>
+ <div class="grid4">
+  ${verified('Barrancas de Belgrano',L('Parque arbolado, ideal para paseos tranquilos.','Tree-lined park, ideal for quiet walks.'),L('Horarios a verificar','Hours to verify'))}
+  ${verified(L('Museo Larreta','Larreta Museum'),L('Museo de Arte Español Enrique Larreta, con jardín andaluz.','Enrique Larreta Museum of Spanish Art, with an Andalusian garden.'),L('Horarios a verificar','Hours to verify'))}
+  ${verified(L('Museo Sarmiento','Sarmiento Museum'),L('Museo Histórico Nacional Domingo F. Sarmiento.','Domingo F. Sarmiento National History Museum.'),L('Horarios a verificar','Hours to verify'))}
+  ${verified(L('Barrio Chino','Chinatown'),L('Pocas cuadras de comercios y gastronomía asiática.','A few blocks of Asian shops and food.'),L('Fuente a enlazar','Source to link'))}
+ </div>
+ <div class="row" style="margin-top:36px"><button class="btn" data-act="go" data-arg="patient" data-sub="viaje">${L('Ver mi itinerario (portal del paciente)','See my itinerary (patient portal)')}</button></div>
+ </div></section>`;
+}
+
+/* ---------- SHOP ---------- */
+function prodCard(p){return `<div class="card prod">${art(p.id==='k2'?'v2':p.id==='k3'?'v3':'','',p.name)}<div class="row between"><h3>${p.name}</h3><span class="price">${p.price?money(p.price):''}</span></div><p class="muted small">${p[S.lang]}</p>
+ <div class="row between"><span class="tiny muted">${p.stock===null?L('Digital','Digital'):p.stock>0?L(`Stock: ${p.stock}`,`In stock: ${p.stock}`):L('Sin stock','Out of stock')} · ${L('precio de demostración','demo price')}</span><button class="btn sm" data-act="addCart" data-arg="${p.id}" ${p.stock===0?'disabled':''}>${L('Agregar','Add')}</button></div></div>`}
+function shop(){return `<section class="band"><div class="wrap">
+ <div class="sec-head"><div><span class="eyebrow">Signature Collection</span><h2>${L('Línea cosmética del Dr. Bujanda','Dr. Bujanda\'s cosmetic line')}</h2></div><p class="muted">${L('Pagás con Mercado Pago. El retiro o envío se coordina por WhatsApp cuando el pedido está listo.','Pay with Mercado Pago. Pickup or delivery is arranged on WhatsApp once your order is ready.')}</p></div>
+ <div class="grid3">${S.products.filter(p=>p.active&&p.legal!=='bloqueado').map(prodCard).join('')}</div>
+ </div></section>`}
+function cartModal(){
+ const rows=S.cart.map(([id,q])=>{const p=S.products.find(x=>x.id===id);return {p,q,sub:p.price*q}});const total=rows.reduce((a,r)=>a+r.sub,0);
+ return `<div class="modal-h"><h2>${L('Tu carrito','Your cart')}</h2><button class="x" data-act="close">✕</button></div>
+ ${rows.length?rows.map(r=>`<div class="list-row"><div><b style="font-weight:500">${r.p.name}</b><div class="tiny muted mono">${money(r.p.price)} × ${r.q}</div></div><div class="row"><button class="icon-btn" data-act="qty" data-arg="${r.p.id}:-1">−</button><span class="mono">${r.q}</span><button class="icon-btn" data-act="qty" data-arg="${r.p.id}:1">+</button><span class="mono" style="min-width:90px;text-align:right">${money(r.sub)}</span></div></div>`).join(''):`<p class="muted">${L('El carrito está vacío.','Your cart is empty.')}</p>`}
+ <div class="list-row"><b style="font-weight:500">Total</b><span class="mono">${money(total)}</span></div>
+ <p class="tiny muted">${L('El stock se descuenta recién cuando Mercado Pago confirma el pago, para evitar ventas duplicadas.','Stock is deducted only once Mercado Pago confirms payment, to avoid double sales.')}</p>
+ <div class="row"><button class="btn" data-act="checkout" ${rows.length?'':'disabled'}>${L('Pagar con Mercado Pago','Pay with Mercado Pago')}</button><button class="btn ghost" data-act="close">${L('Seguir comprando','Keep shopping')}</button></div>`;
+}
+
+/* ---------- WORKSHOPS ---------- */
+function workshops(){return `<section class="band"><div class="wrap">
+ <div class="sec-head"><div><span class="eyebrow">${L('Formación para médicos','Training for physicians')}</span><h2>Workshops</h2></div><p class="muted">${L('Docente: Dr. Diego Bujanda, Speaker oficial de Sculptra designado por Galderma para Argentina.','Faculty: Dr. Diego Bujanda, official Sculptra speaker appointed by Galderma for Argentina.')}</p></div>
+ <div class="notice" style="margin-bottom:28px"><b>${L('Programas de demostración.','Demo programmes.')}</b> ${L('Títulos, fechas, cupos y precios son ficticios hasta que la clínica cargue su oferta real.','Titles, dates, seats and prices are fictitious until the clinic loads its real offering.')}</div>
+ <div class="grid2" style="align-items:stretch">${S.workshops.filter(w=>w.published).map(w=>wsCard(w,false)).join('')}</div>
+ </div></section>`}
+function wsCard(w,portal){
+ const taken=S.enrolls.filter(e=>e.wid===w.id&&e.status==='pagado').length;const mine=portal&&S.enrolls.find(e=>e.wid===w.id&&e.did===ME.pro);
+ return `<div class="card"><div class="chips"><span class="chip gold">${w.mode}</span><span class="chip">${dd(w.date)}</span><span class="chip">${w.hours} h</span>${w.req?`<span class="chip info">${L('Requiere matrícula','License required')}</span>`:''}</div>
+ <h3 style="font-size:1.6rem">${w[S.lang]}</h3><p class="muted small">${L('Especialidades','Specialties')}: ${w.spec}</p>
+ <div class="row between"><span class="mono">${money(w.ars)} <span class="muted">· ${L('ref.','ref.')} ${money(w.usd,'USD')}</span></span><span class="tiny muted">${L('Cupos','Seats')}: ${w.seats-taken}/${w.seats}</span></div>
+ ${mine?chip(mine.status,EST):`<div><button class="btn sm" data-act="enroll" data-arg="${w.id}">${L('Inscribirme','Enroll')}</button></div>`}</div>`;
+}
+
+/* ---------- NOTES / FAQ ---------- */
+const NOTES=()=>[
+ {t:L('Reducción de papada sin cirugía','Double chin reduction without surgery'),c:L('Artículo médico','Medical article'),slug:'reduccion-de-papada-sin-cirugia',mig:true},
+ {t:L('Rejuvenecimiento vulvar con bioestimulación sin cirugía','Non-surgical vulvar rejuvenation with biostimulation'),c:L('Artículo médico','Medical article'),slug:'rejuvenecimiento-vulvar-bioestimulacion',mig:true},
+ {t:L('Consulta online con el Dr. Bujanda','Online consultation with Dr. Bujanda'),c:L('Novedades','News'),slug:'consulta-online',mig:true},
+ {t:L('Entrevistas y apariciones en medios','Interviews and media appearances'),c:L('Prensa','Press'),slug:'prensa',mig:false},
+ {t:L('Congresos y simposios','Congresses and symposia'),c:L('Congresos','Congresses'),slug:'congresos',mig:false}
+];
+function noteList(n){return NOTES().slice(0,n).map(x=>`<div class="list-row" style="align-items:flex-start"><div style="flex:1"><span class="eyebrow">${x.c}</span><h3 style="font-size:1.35rem;margin-top:4px">${x.t}</h3><span class="tiny muted mono">/${S.lang}/${L('notas','journal')}/${x.slug}</span></div>${x.mig?`<span class="chip info">${L('Migrar del sitio actual','Migrate from current site')}</span>`:`<span class="chip warn">${L('Sin contenido aún','No content yet')}</span>`}</div>`).join('')}
+function notes(){return `<section class="band"><div class="wrap"><div class="sec-head"><div><span class="eyebrow">${L('Editorial','Editorial')}</span><h2>${L('Notas, entrevistas y contenidos','Notes, interviews and content')}</h2></div><p class="muted">${L('Cada publicación tendrá autor, fecha de publicación y de revisión médica, categoría, imagen y URL optimizada.','Each post will have author, publication and medical review dates, category, image and an optimized URL.')}</p></div>${noteList(9)}</div></section>`}
+function FAQ(){return [
+ {c:L('Consultas','Consultations'),q:[[L('¿Puedo hacer la primera consulta por videollamada?','Can my first consultation be by video?'),L('Sí. Podés elegir consulta presencial o por videollamada al reservar desde tu portal.','Yes. You can choose in-person or video when booking from your portal.')],[L('¿Pagar significa que el turno está confirmado?','Does paying mean my appointment is confirmed?'),L('No. El pago reserva tu solicitud; la clínica confirma el turno y te avisa por email y WhatsApp.','No. Payment secures your request; the clinic confirms the appointment and notifies you by email and WhatsApp.')]]},
+ {c:L('Tratamientos','Treatments'),q:[[L('¿Cómo sé qué tratamiento me conviene?','How do I know which treatment suits me?'),L('La indicación siempre surge de una evaluación médica individual.','The recommendation always comes from an individual medical evaluation.')]]},
+ {c:L('Cirugías','Surgery'),q:[[L('¿Dónde se realizan las cirugías?','Where are surgeries performed?'),L('El lugar de cada procedimiento se informa en la consulta y en el presupuesto.','The location of each procedure is explained in consultation and in the quote.')]]},
+ {c:L('Recuperación','Recovery'),q:[[L('¿Cómo es el seguimiento posoperatorio?','How does post-op follow-up work?'),L('Con controles presenciales y un canal privado en tu portal. Ese canal no reemplaza a los servicios de emergencia.','Through in-person check-ups and a private channel in your portal. That channel does not replace emergency services.')]]},
+ {c:L('Pagos','Payments'),q:[[L('¿Qué medios de pago aceptan?','Which payment methods do you accept?'),L('Pagos online mediante Mercado Pago. Otros medios se informan en cada presupuesto.','Online payments via Mercado Pago. Other methods are detailed in each quote.')]]},
+ {c:L('Cancelaciones','Cancellations'),q:[[L('¿Qué pasa si cancelo?','What if I cancel?'),L('Con al menos 24 horas de anticipación respecto del turno confirmado (hora de Buenos Aires), la cancelación es elegible para reembolso. Con menos de 24 horas o el mismo día podés cancelar, pero no hay devolución automática. Si cancela la clínica, se reintegra el total.','With at least 24 hours\' notice before the confirmed appointment (Buenos Aires time), the cancellation is eligible for a refund. With less than 24 hours or on the same day you can cancel, but there is no automatic refund. If the clinic cancels, you get a full refund.')]]},
+ {c:L('Pacientes internacionales','International patients'),q:[[L('¿Me ayudan con el alojamiento?','Do you help with accommodation?'),L('Te compartimos una guía curada de opciones cercanas. No gestionamos pasajes aéreos.','We share a curated guide of nearby options. We do not handle flights.')]]},
+ {c:L('Capacitaciones','Training'),q:[[L('¿Quién puede inscribirse a los workshops?','Who can enroll in workshops?'),L('Profesionales de la salud. Algunos programas requieren verificar la matrícula.','Health professionals. Some programmes require license verification.')]]}
+]}
+function faq(){return `<section class="band"><div class="wrap"><div class="sec-head"><div><span class="eyebrow">FAQ</span><h2>${L('Preguntas frecuentes','Frequently asked questions')}</h2></div></div>
+ <div class="faq">${FAQ().map(c=>`<div style="margin-bottom:28px"><span class="eyebrow">${c.c}</span>${c.q.map(([q,a])=>`<details><summary>${q}</summary><p>${a}</p></details>`).join('')}</div>`).join('')}</div></div></section>`}
+
+/* ---------- AUTH ---------- */
+function auth(){
+ const t=S.authTab||'in';
+ return `<section class="band"><div class="wrap grid2" style="align-items:start">
+ <div class="prose"><span class="eyebrow">${L('Acceso','Access')}</span><h2 style="font-size:clamp(2rem,4vw,3.2rem)">${S.after==='pro'?L('Portal de profesionales','Professional portal'):L('Portal del paciente','Patient portal')}</h2><p>${S.after==='pro'?L('Inscripciones, pagos, material y novedades de capacitaciones.','Enrollments, payments, materials and training news.'):L('Reservá consultas, seguí tus pagos y presupuestos y comunicate de forma privada con el equipo médico.','Book consultations, track payments and quotes, and talk privately with the medical team.')}</p>
+ <div class="notice"><b>${L('Adaptador de demostración.','Demo adapter.')}</b> ${L('En esta demo no se crean cuentas reales. En producción: registro con verificación de email, contraseñas con hash y recuperación segura.','No real accounts are created in this demo. In production: sign-up with email verification, hashed passwords and secure recovery.')}</div></div>
+ <form class="card" data-form="auth" style="gap:14px">
+  <div class="filters" style="margin:0">${[['in','Ingresar','Sign in'],['up','Crear cuenta','Sign up'],['rec','Recuperar contraseña','Reset password']].map(([k,es,en])=>`<button type="button" data-act="authTab" data-arg="${k}" class="${t===k?'on':''}">${L(es,en)}</button>`).join('')}</div>
+  ${t==='up'?`<div class="field"><label for="au-n">${L('Nombre y apellido','Full name')}</label><input id="au-n" value="Lucía Ferrer"></div>`:''}
+  <div class="field"><label for="au-e">Email</label><input id="au-e" type="email" value="${S.after==='pro'?'demo.profesional@ejemplo.test':'demo.paciente@ejemplo.test'}"></div>
+  ${t!=='rec'?`<div class="field"><label for="au-p">${L('Contraseña','Password')}</label><input id="au-p" type="password" value="demo-demo"></div>`:''}
+  ${t==='up'?`<label class="check"><input type="checkbox" id="au-mk"> ${L('Acepto recibir comunicaciones comerciales (opcional, independiente).','I agree to receive marketing messages (optional, separate).')}</label>`:''}
+  <button class="btn" type="submit">${t==='rec'?L('Enviar enlace','Send link'):L('Entrar con la cuenta demo','Enter with the demo account')}</button>
+ </form></div></section>`;
+}
+
+/* ---------- WORKSPACE SHELL ---------- */
+function ws(who,role,tabs,content){
+ return `<div class="ws"><aside class="side" aria-label="${L('Secciones','Sections')}"><div class="who"><span class="eyebrow">${role}</span><b>${who}</b></div>${tabs.map(t=>t.grp?`<div class="grp">${t.grp}</div>`:`<button data-act="sub" data-arg="${t.k}" class="${S.sub===t.k?'on':''}">${t.l}${t.n?`<span class="n">${t.n}</span>`:''}</button>`).join('')}</aside><div class="main">${content}</div></div>`;
+}
+
+/* ---------- PATIENT ---------- */
+function patientWS(){
+ const pid=ME.patient;const mine=S.appts.filter(a=>a.pid===pid);
+ const tabs=[{k:'inicio',l:L('Inicio','Home')},{k:'reservar',l:L('Reservar consulta','Book')},{k:'turnos',l:L('Mis turnos','Appointments'),n:mine.filter(a=>a.status==='reprogramar').length},{k:'pagos',l:L('Pagos y comprobantes','Payments')},{k:'presupuestos',l:L('Presupuestos','Quotes'),n:S.budgets.filter(b=>b.pid===pid&&b.status==='enviado').length},{k:'seguimiento',l:L('Seguimiento','Follow-up')},{k:'documentos',l:L('Documentos','Documents')},{k:'viaje',l:L('Mi viaje','My trip')},{k:'admision',l:L('Formulario de admisión','Intake form')}];
+ const c={inicio:pInicio,reservar:pReservar,turnos:pTurnos,pagos:pPagos,presupuestos:pPres,seguimiento:pSeg,documentos:pDocs,viaje:pViaje,admision:pAdm}[S.sub]||pInicio;
+ return ws(P(pid).name,L('Paciente · ficticia','Patient · fictitious'),tabs,c());
+}
+function apptRow(a,actions){return `<div class="list-row"><div><b style="font-weight:500">${dt(a.start)}</b> <span class="muted small">· ${a.type==='video'?L('Videollamada','Video call'):L('Presencial','In person')}${a.note?' · '+a.note:''}</span>${a.proposal?`<div class="small">${L('Propuesta','Proposed')}: <b style="font-weight:500">${dt(a.proposal)}</b></div>`:''}</div><div class="row">${chip(a.status)}${actions||''}</div></div>`}
+function pInicio(){
+ const pid=ME.patient;const next=S.appts.filter(a=>a.pid===pid&&new Date(a.start)>NOW&&!['cancelado','rechazado'].includes(a.status)).sort((a,b)=>a.start.localeCompare(b.start));
+ return `<div><span class="eyebrow">${L('Hola','Hello')}</span><h1>${P(pid).name.split(' ')[0]}</h1></div>
+ <div class="kpis"><div class="kpi"><span class="l">${L('Próximo turno','Next appointment')}</span><span class="v" style="font-size:1.3rem">${next[0]?dt(next[0].start):'—'}</span></div><div class="kpi"><span class="l">${L('Presupuestos a responder','Quotes to answer')}</span><span class="v">${S.budgets.filter(b=>b.pid===pid&&b.status==='enviado').length}</span></div><div class="kpi"><span class="l">${L('Mensajes','Messages')}</span><span class="v">${(S.msgs[pid]||[]).length}</span></div></div>
+ <div class="card"><span class="eyebrow">${L('Próximos turnos','Upcoming')}</span>${next.map(a=>apptRow(a)).join('')||`<p class="muted">${L('Sin turnos próximos.','No upcoming appointments.')}</p>`}<div><button class="btn sm" data-act="sub" data-arg="reservar">${L('Reservar consulta','Book a consultation')}</button></div></div>
+ <div class="notice"><b>${L('Importante:','Important:')}</b> ${L('el canal privado no reemplaza a los servicios de emergencia. Ante una urgencia, llamá al 107 (SAME) o acudí a una guardia.','the private channel does not replace emergency services. In an emergency, call 107 (SAME) or go to an emergency room.')}</div>`;
+}
+function pReservar(){
+ const b=S.bk;const days=bizDays(10);
+ const st=['Tipo','Horario','Confirmar','Pago','Estado'],sten=['Type','Time','Review','Payment','Status'];
+ let body='';
+ if(b.step===1){body=`<div class="grid2" style="align-items:stretch">${['pres','video'].map(t=>`<button class="card" style="text-align:left" data-act="bkType" data-arg="${t}"><span class="eyebrow">${t==='pres'?L('En la clínica','At the clinic'):L('Desde donde estés','From anywhere')}</span><h3 style="font-size:1.6rem">${t==='pres'?L('Consulta presencial','In-person consultation'):L('Videoconsulta','Video consultation')}</h3><span class="mono">${money(S.fees[t])}</span><span class="tiny muted">${L('Honorario de demostración, configurable desde el backend','Demo fee, configurable from the back office')}</span></button>`).join('')}</div>`}
+ if(b.step===2){const day=b.day||days[0];body=`<div class="days">${days.map(d=>`<button data-act="bkDay" data-arg="${d}" class="${d===day?'on':''}"><span class="tiny">${dt(d,{weekday:'short'})}</span><b>${dt(d,{day:'numeric'})}</b><span class="tiny">${dt(d,{month:'short'})}</span></button>`).join('')}</div>
+  <div class="slots">${slotsOf(day).map(iso=>{const s=slotState(iso);return `<button data-act="bkSlot" data-arg="${iso}" ${s!=='free'?'disabled':''} title="${s==='held'?L('Reservado temporalmente por otro paciente','Temporarily held by another patient'):''}" class="${b.slot===iso?'on':''}">${hm(iso)}</button>`}).join('')}</div>
+  <p class="tiny muted">${L('Tachado: ocupado, bloqueado por la agenda o reservado temporalmente por otro paciente. Hora de Buenos Aires.','Struck through: taken, blocked or temporarily held by another patient. Buenos Aires time.')}</p>
+  <div class="row"><button class="btn ghost sm" data-act="bkBack">${L('Volver','Back')}</button></div>`}
+ if(b.step===3){body=`<div class="card"><div class="row between"><span class="eyebrow">${L('Resumen','Summary')}</span>${holdTag()}</div>
+  <div class="list-row"><span>${b.type==='video'?L('Videoconsulta','Video consultation'):L('Consulta presencial','In-person consultation')}${b.proc?' · '+esc(b.proc):''}</span><b class="mono" style="font-weight:500">${money(S.fees[b.type])}</b></div>
+  <div class="list-row"><span>${L('Fecha y hora','Date and time')}</span><b style="font-weight:500">${dt(b.slot)}</b></div>
+  <div class="notice"><b>${L('Política de cancelación.','Cancellation policy.')}</b> ${L(`Cancelando con al menos ${S.policy.refundHours} horas de anticipación respecto del turno confirmado (hora de Buenos Aires) es elegible para reembolso. Con menos tiempo o el mismo día podés cancelar, sin devolución automática. Si cancela la clínica, se reintegra el total.`,`Cancelling at least ${S.policy.refundHours} hours before the confirmed appointment (Buenos Aires time) is eligible for a refund. With less notice or on the same day you can cancel, with no automatic refund. If the clinic cancels, you get a full refund.`)}</div>
+  <label class="check"><input type="checkbox" id="bk-pol" data-ch="bkPolicy" ${b.policy?'checked':''}> ${L('Leí y acepto la política de cancelación (se registra fecha y hora de aceptación).','I have read and accept the cancellation policy (acceptance time is recorded).')}</label>
+  <p class="tiny muted">${L('El pago no confirma el turno: la clínica lo confirma después.','Payment does not confirm the appointment: the clinic confirms it afterwards.')}</p>
+  <div class="row"><button class="btn" data-act="bkPay" ${b.policy?'':'disabled'}>${L('Pagar con Mercado Pago','Pay with Mercado Pago')}</button><button class="btn ghost sm" data-act="bkRelease">${L('Elegir otro horario','Pick another time')}</button></div></div>`}
+ if(b.step===5){const a=S.appts.find(x=>x.id===b.appt);body=`<div class="card"><span class="eyebrow">${L('Solicitud registrada','Request recorded')}</span><h3 style="font-size:1.7rem">${L('Pago aprobado. Tu turno espera la confirmación de la clínica.','Payment approved. Your appointment awaits the clinic\'s confirmation.')}</h3>${a?apptRow(a):''}<p class="muted small">${L('Te enviamos un aviso por email y WhatsApp con una plantilla neutra. Probá confirmar el turno cambiando al perfil Secretaría.','We sent a neutral email and WhatsApp notice. Try confirming the appointment by switching to the Secretary profile.')}</p><div class="row"><button class="btn sm" data-act="sub" data-arg="turnos">${L('Ver mis turnos','See my appointments')}</button><button class="btn ghost sm" data-act="roleTo" data-arg="secretary">${L('Cambiar a Secretaría','Switch to Secretary')}</button></div></div>`}
+ return `<div><span class="eyebrow">${L('Reserva','Booking')}</span><h1>${L('Reservar consulta','Book a consultation')}</h1></div>
+ <div class="steps">${st.map((s,i)=>`<span class="${b.step===i+1||(b.step===5&&i===4)?'on':''}">${i+1}. ${L(s,sten[i])}</span>`).join('')}</div>${body}`;
+}
+function holdTag(){if(!S.hold)return '';const s=Math.max(0,Math.round((S.hold.until-Date.now())/1000));return `<span class="chip info">${L('Horario reservado','Slot held')} <span class="mono" id="holdClock">${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}</span></span>`}
+function pTurnos(){
+ const pid=ME.patient;const list=S.appts.filter(a=>a.pid===pid).sort((a,b)=>b.start.localeCompare(a.start));
+ return `<div><span class="eyebrow">${L('Historial','History')}</span><h1>${L('Mis turnos','My appointments')}</h1></div><div class="card">${list.map(a=>{let act='';const fut=new Date(a.start)>NOW;
+  if(fut&&['confirmado','pagado'].includes(a.status))act=`<button class="btn sm ghost" data-act="cancelPrev" data-arg="${a.id}">${L('Cancelar','Cancel')}</button>`;
+  if(a.status==='reprogramar')act=`<button class="btn sm" data-act="propAccept" data-arg="${a.id}">${L('Aceptar fecha','Accept date')}</button><button class="btn sm ghost" data-act="propReject" data-arg="${a.id}">${L('Rechazar','Decline')}</button>`;
+  return apptRow(a,act)}).join('')}</div>`;
+}
+function payRows(list){return `<div class="tbl-wrap"><table><thead><tr><th>${L('Fecha','Date')}</th><th>${L('Concepto','Item')}</th><th>${L('Estado','Status')}</th><th style="text-align:right">${L('Importe','Amount')}</th><th></th></tr></thead><tbody>${list.map(p=>`<tr><td>${dd(p.date)}</td><td>${payLabel(p)}</td><td>${chip(p.status,PST)}${p.noRefund?` <span class="chip">${L('sin reembolso automático','no auto refund')}</span>`:''}</td><td class="num">${money(p.amount)}</td><td>${p.status!=='pending'&&p.status!=='rejected'?`<button class="btn sm ghost" data-act="receipt" data-arg="${p.id}">${L('Comprobante','Receipt')}</button>`:''}</td></tr>`).join('')}</tbody></table></div>`}
+function payLabel(p){if(p.kind==='consulta'){const a=S.appts.find(x=>x.id===p.ref);return (a?.type==='video'?L('Videoconsulta','Video consultation'):L('Consulta presencial','In-person consultation'))+(a?' · '+P(a.pid).name:'')}if(p.kind==='producto'){const o=S.orders.find(x=>x.id===p.ref);return L('Pedido','Order')+' '+p.ref.toUpperCase()+(o?' · '+P(o.pid).name:'')}const e=S.enrolls.find(x=>x.id===p.ref);return L('Inscripción','Enrollment')+(e?' · '+D(e.did).name:'')}
+function pPagos(){const pid=ME.patient;const ids=S.appts.filter(a=>a.pid===pid).map(a=>a.id).concat(S.orders.filter(o=>o.pid===pid).map(o=>o.id));return `<div><span class="eyebrow">${L('Pagos','Payments')}</span><h1>${L('Pagos y comprobantes','Payments and receipts')}</h1></div>${payRows(S.pays.filter(p=>ids.includes(p.ref)).sort((a,b)=>b.date.localeCompare(a.date)))}<p class="tiny muted">${L('Estados sincronizados por webhook validado de Mercado Pago (en la demo, simulado en sandbox).','Statuses synced via validated Mercado Pago webhook (simulated in sandbox for this demo).')}</p>`}
+function pPres(){const pid=ME.patient;return `<div><span class="eyebrow">${L('Presupuestos','Quotes')}</span><h1>${L('Mis presupuestos','My quotes')}</h1></div><div class="notice">${L('Los presupuestos son documentos comerciales. El consentimiento informado es un documento médico separado que se firma en consulta.','Quotes are commercial documents. Informed consent is a separate medical document signed in consultation.')}</div>
+ ${S.budgets.filter(b=>b.pid===pid).map(b=>`<div class="card"><div class="row between"><div><span class="eyebrow">${b.id.toUpperCase()} · ${dd(b.date)}</span><h3 style="font-size:1.5rem;margin-top:4px">${esc(b.proc)}</h3></div>${chip(b.status,BST)}</div><div class="row between"><span class="mono">${money(b.amount)}</span><div class="row">${b.status==='enviado'||b.status==='aclaracion'?`<button class="btn sm" data-act="budAccept" data-arg="${b.id}">${L('Aceptar','Accept')}</button>`:''}<button class="btn sm ghost" data-act="budView" data-arg="${b.id}">${L('Ver / descargar','View / download')}</button></div></div>
+ ${b.status==='enviado'?`<div class="field"><label for="ask-${b.id}">${L('Solicitar aclaración','Ask for clarification')}</label><div class="row" style="flex-wrap:nowrap"><input id="ask-${b.id}" placeholder="${L('Escribí tu consulta','Write your question')}"><button class="btn sm ghost" data-act="budAsk" data-arg="${b.id}">${L('Enviar','Send')}</button></div></div>`:''}</div>`).join('')}`}
+function thread(pid,me){const m=S.msgs[pid]||[];return `<div class="thread" id="thread">${m.map(x=>`<div class="msg ${x.from===me?'me':''}"><span>${esc(x.text)}</span>${x.file?`<span class="tiny">📎 ${esc(x.file)}</span>`:''}<span class="meta">${x.from==='doc'?'Dr. Bujanda':P(pid).name} · ${dt(x.at)}</span></div>`).join('')||`<p class="muted">${L('Sin mensajes.','No messages.')}</p>`}</div>`}
+function pSeg(){const pid=ME.patient;return `<div><span class="eyebrow">${L('Canal privado','Private channel')}</span><h1>${L('Seguimiento posoperatorio','Post-op follow-up')}</h1></div>
+ <div class="notice"><b>${L('No es un canal de emergencias.','Not an emergency channel.')}</b> ${L('Ante una urgencia, llamá al 107 (SAME) o acudí a una guardia.','In an emergency, call 107 (SAME) or go to an emergency room.')}</div>
+ <div class="card">${thread(pid,'pat')}<div class="field"><label for="msg-in">${L('Mensaje','Message')}</label><textarea id="msg-in" placeholder="${L('Escribí al equipo médico','Write to the medical team')}"></textarea></div><div class="row between"><input type="file" id="msg-file" accept="image/*,video/*,application/pdf" style="max-width:320px"><button class="btn sm" data-act="sendMsg" data-arg="pat">${L('Enviar','Send')}</button></div><p class="tiny muted">${L('Demo: los archivos no se suben; solo se registra su nombre. En producción: almacenamiento privado y validación de archivos.','Demo: files are not uploaded; only the name is recorded. In production: private storage and file validation.')}</p></div>`}
+function pDocs(){const pid=ME.patient;return `<div><span class="eyebrow">${L('Documentos médicos','Medical documents')}</span><h1>${L('Documentos','Documents')}</h1></div><div class="card">${S.docs.filter(d=>d.pid===pid).map(d=>`<div class="list-row"><div><b style="font-weight:500">${esc(d.name)}</b><div class="tiny muted">${d.type} · ${d.by} · ${dd(d.date)}</div>${d.rx?`<div class="tiny" style="color:var(--warn)">${L('Las recetas se emiten mediante una plataforma de prescripción electrónica habilitada en Argentina. Un PDF genérico no es una receta válida.','Prescriptions are issued through an authorized electronic prescription platform in Argentina. A generic PDF is not a valid prescription.')}</div>`:''}</div>${d.rx?`<span class="chip warn">${L('Integración pendiente','Integration pending')}</span>`:`<button class="btn sm ghost" data-act="dl" data-arg="${esc(d.name)}">${L('Descargar','Download')}</button>`}</div>`).join('')}</div>`}
+function pViaje(){const pid=ME.patient;const list=S.appts.filter(a=>a.pid===pid&&new Date(a.start)>NOW&&!['cancelado','rechazado'].includes(a.status)).sort((a,b)=>a.start.localeCompare(b.start));
+ return `<div><span class="eyebrow">${L('Turismo médico','Medical travel')}</span><h1>${L('Mi viaje','My trip')}</h1></div>
+ <div class="card"><span class="eyebrow">${L('Itinerario de turnos y controles','Appointments and check-ups')}</span>${list.map(a=>apptRow(a)).join('')||`<p class="muted">—</p>`}</div>
+ <div class="grid2" style="align-items:stretch"><div class="card"><span class="eyebrow">${L('Indicaciones aprobadas por tu cirujano','Instructions approved by your surgeon')}</span><div class="list-row"><span>${L('Indicaciones posoperatorias (ficticio)','Post-op instructions (fictitious)')}</span><span class="chip ok">${L('Aprobado','Approved')}</span></div><div class="list-row"><span>${L('Indicaciones preoperatorias','Pre-op instructions')}</span><span class="chip">${L('Aún no aprobado','Not yet approved')}</span></div></div>
+ <div class="card"><span class="eyebrow">${L('Información práctica','Practical information')}</span><p class="muted small">${L('Emergencias, SUBE, medios de pago, movilidad y guía del barrio.','Emergencies, SUBE card, payments, transport and neighbourhood guide.')}</p><div><button class="btn sm ghost" data-act="go" data-arg="tourism">${L('Abrir guía','Open guide')}</button></div></div></div>`}
+function pAdm(){const sent=S.intakeSent[ME.patient];return `<div><span class="eyebrow">${L('Antes de tu consulta','Before your consultation')}</span><h1>${L('Formulario de admisión','Intake form')}</h1></div>
+ <div class="notice"><b>${L('Datos sensibles.','Sensitive data.')}</b> ${L('En producción se guardan cifrados y separados de los datos comerciales, y nunca se usan para marketing. En esta demo el contenido no se guarda.','In production they are stored encrypted, separate from commercial data, and never used for marketing. In this demo the content is not saved.')}</div>
+ ${sent?`<div class="card"><span class="chip ok" style="justify-self:start">${L('Enviado','Submitted')} · ${dt(sent)}</span><p class="muted">${L('El equipo médico revisará tu formulario antes de la consulta.','The medical team will review your form before the consultation.')}</p></div>`:`<form class="card" data-form="intake" style="gap:14px">
+ <div class="field"><label for="in-ant">${L('Antecedentes médicos y quirúrgicos','Medical and surgical history')}</label><textarea id="in-ant" placeholder="${L('No ingreses datos reales en la demo','Do not enter real data in the demo')}"></textarea></div>
+ <div class="grid2" style="gap:14px"><div class="field"><label for="in-med">${L('Medicación actual','Current medication')}</label><input id="in-med"></div><div class="field"><label for="in-al">${L('Alergias','Allergies')}</label><input id="in-al"></div></div>
+ <label class="check"><input type="checkbox" required> ${L('Declaro que la información es veraz y autorizo su uso exclusivamente con fines asistenciales.','I declare the information is accurate and authorize its use for care purposes only.')}</label>
+ <button class="btn" type="submit">${L('Enviar formulario','Submit form')}</button></form>`}`}
+
+/* ---------- PRO ---------- */
+function proWS(){
+ const tabs=[{k:'inicio',l:L('Inicio','Home')},{k:'capacitaciones',l:L('Capacitaciones','Trainings')},{k:'inscripciones',l:L('Mis inscripciones','My enrollments')},{k:'pagos',l:L('Pagos','Payments')},{k:'material',l:L('Material','Materials')},{k:'notificaciones',l:L('Notificaciones','Notifications')},{k:'perfil',l:L('Perfil profesional','Profile')}];
+ const d=D(ME.pro);const mine=S.enrolls.filter(e=>e.did===ME.pro);
+ const c={
+  inicio:()=>`<div><span class="eyebrow">${L('Portal de profesionales','Professional portal')}</span><h1>${d.name}</h1></div><div class="kpis"><div class="kpi"><span class="l">${L('Inscripciones','Enrollments')}</span><span class="v">${mine.length}</span></div><div class="kpi"><span class="l">${L('Próxima capacitación','Next training')}</span><span class="v" style="font-size:1.2rem">${mine[0]?dd(W(mine[0].wid).date):'—'}</span></div><div class="kpi"><span class="l">${L('Matrícula','License')}</span><span class="v" style="font-size:1.2rem">${d.verified?L('Verificada','Verified'):L('En revisión','Under review')}</span></div></div>${S.workshops.filter(w=>w.published).slice(0,2).map(w=>wsCard(w,true)).join('')}`,
+  capacitaciones:()=>`<div><span class="eyebrow">${L('Oferta','Offering')}</span><h1>${L('Capacitaciones','Trainings')}</h1></div><div class="notice"><b>${L('Pesos y dólares.','Pesos and dollars.')}</b> ${L('El cobro se procesa en ARS mediante Mercado Pago. El precio en USD es de referencia: cobrar en dólares requiere un proveedor compatible con la cuenta del comercio y no se simula en esta demo.','Charges are processed in ARS via Mercado Pago. The USD price is a reference: charging in dollars needs a provider compatible with the merchant account and is not simulated in this demo.')}</div><div class="grid2" style="align-items:stretch">${S.workshops.filter(w=>w.published).map(w=>wsCard(w,true)).join('')}</div>`,
+  inscripciones:()=>`<div><h1>${L('Mis inscripciones','My enrollments')}</h1></div><div class="card">${mine.map(e=>`<div class="list-row"><div><b style="font-weight:500">${W(e.wid)[S.lang]}</b><div class="tiny muted">${dd(W(e.wid).date)} · ${W(e.wid).mode}</div></div><div class="row">${chip(e.status,EST)}${e.status==='pago_pendiente'?`<button class="btn sm" data-act="enrollPay" data-arg="${e.id}">${L('Pagar','Pay')}</button>`:''}</div></div>`).join('')||`<p class="muted">—</p>`}</div>`,
+  pagos:()=>`<div><h1>${L('Pagos','Payments')}</h1></div>${payRows(S.pays.filter(p=>mine.some(e=>e.pay===p.id)))}`,
+  material:()=>`<div><h1>${L('Material autorizado','Authorized materials')}</h1></div><div class="card">${mine.filter(e=>e.status==='pagado').map(e=>`<div class="list-row"><span>${L('Programa y bibliografía','Programme and reading list')} · ${W(e.wid)[S.lang]} (${L('ficticio','fictitious')})</span><button class="btn sm ghost" data-act="dl" data-arg="programa-${e.wid}.pdf">${L('Descargar','Download')}</button></div>`).join('')||`<p class="muted">${L('El material se habilita al confirmar la inscripción.','Materials unlock once enrollment is confirmed.')}</p>`}</div>`,
+  notificaciones:()=>`<div><h1>${L('Notificaciones','Notifications')}</h1></div><div class="card">${[['email','Email'],['wa','WhatsApp']].map(([k,l])=>`<div class="list-row"><div><b style="font-weight:500">${l}</b><div class="tiny muted">${L('Avisos de nuevas capacitaciones. Consentimiento independiente y revocable.','New training alerts. Separate, revocable consent.')}</div></div><button class="toggle ${D(ME.pro).consent[k]?'on':''}" data-act="proPref" data-arg="${k}" aria-pressed="${D(ME.pro).consent[k]}" aria-label="${l}"></button></div>`).join('')}</div>`,
+  perfil:()=>`<div><h1>${L('Perfil profesional','Professional profile')}</h1></div><div class="card">${[[L('Especialidad','Specialty'),d.spec],[L('País','Country'),d.country],[L('Ciudad','City'),d.city],[L('Institución','Institution'),d.inst],[L('Matrícula','License'),'MP 00000 ('+L('ficticia','fictitious')+')'],[L('Intereses','Interests'),d.interests.join(', ')]].map(([k,v])=>`<div class="list-row"><span class="eyebrow">${k}</span><span>${v}</span></div>`).join('')}<div class="list-row"><span class="eyebrow">${L('Verificación','Verification')}</span>${d.verified?`<span class="chip ok">${L('Verificada por la clínica','Verified by the clinic')}</span>`:`<span class="chip info">${L('En revisión','Under review')}</span>`}</div></div>`
+ }[S.sub]||(()=>'');
+ return ws(d.name,L('Profesional · ficticio','Professional · fictitious'),tabs,c());
+}
+
+/* ---------- ADMIN ---------- */
+function adminWS(){
+ const sur=S.role==='surgeon';const pend=S.appts.filter(a=>a.status==='pagado').length;const refunds=S.pays.filter(p=>p.status==='refund_requested').length;
+ let tabs;
+ if(sur)tabs=[{grp:L('General','Overview')},{k:'dashboard',l:L('Dashboard','Dashboard')},{k:'finanzas',l:L('Finanzas','Finance'),n:refunds},{grp:L('Pacientes','Patients')},{k:'solicitudes',l:L('Solicitudes de turno','Requests'),n:pend},{k:'agenda',l:L('Agenda','Schedule')},{k:'crm',l:'CRM'},{k:'pacientes',l:L('Pacientes','Patients')},{k:'presupuestos',l:L('Presupuestos','Quotes')},{k:'seguimiento',l:L('Seguimiento','Follow-up')},{grp:L('Negocio','Business')},{k:'tienda',l:L('Tienda','Shop')},{k:'capacitaciones',l:L('Capacitaciones','Trainings')},{k:'profesionales',l:L('CRM profesionales','Professionals CRM')},{grp:L('Sitio','Website')},{k:'contenidos',l:L('Contenidos','Content')},{k:'seo',l:'SEO / GEO'},{grp:L('Sistema','System')},{k:'permisos',l:L('Permisos','Permissions')},{k:'notificaciones',l:L('Notificaciones','Notifications')},{k:'auditoria',l:L('Auditoría','Audit log')}];
+ else{const p=S.perms;tabs=[{k:'tareas',l:L('Mis tareas','My tasks'),n:S.tasks.filter(t=>!t.done).length}];
+  if(p.solicitudes)tabs.push({k:'solicitudes',l:L('Solicitudes de turno','Requests'),n:pend});if(p.agenda)tabs.push({k:'agenda',l:L('Agenda','Schedule')});if(p.pagos)tabs.push({k:'pagosSec',l:L('Estado de pagos','Payment status')});if(p.recordatorios)tabs.push({k:'recordatorios',l:L('Recordatorios','Reminders')});if(p.crm)tabs.push({k:'crm',l:'CRM'});if(p.tienda)tabs.push({k:'tienda',l:L('Pedidos','Orders')});if(p.capacitaciones)tabs.push({k:'capacitaciones',l:L('Capacitaciones','Trainings')});if(p.clinica)tabs.push({k:'pacientes',l:L('Pacientes','Patients')});}
+ const allowed=tabs.filter(t=>t.k).map(t=>t.k);if(!allowed.includes(S.sub))S.sub=allowed[0];
+ const c={dashboard:aDash,finanzas:aFin,solicitudes:aSol,agenda:aAgenda,crm:aCrm,pacientes:aPac,presupuestos:aPres,seguimiento:aSeg,tienda:aShop,capacitaciones:aWs,profesionales:aPros,contenidos:aCont,seo:aSeo,permisos:aPerm,notificaciones:aNotif,auditoria:aAudit,tareas:aTasks,pagosSec:()=>`<div><h1>${L('Estado de pagos','Payment status')}</h1></div><div class="notice">${L('Vista de solo lectura. Autorizar reembolsos es exclusivo del cirujano.','Read-only view. Authorizing refunds is reserved for the surgeon.')}</div>${payRows(S.pays.slice().sort((a,b)=>b.date.localeCompare(a.date)))}`,recordatorios:aRem}[S.sub];
+ return ws(sur?'Dr. Diego Bujanda':L('Secretaría','Secretary'),sur?L('Administrador principal','Main administrator'):L('Administradora','Administrator'),tabs,c());
+}
+function monthly(){
+ const cur={m:'2026-10',consulta:0,producto:0,capacitacion:0};
+ S.pays.forEach(p=>{if(p.date.startsWith('2026-10')&&p.status!=='pending'&&p.status!=='rejected'){cur[p.kind]+=p.amount-(p.refunded||0)}});
+ return S.hist.concat([cur]);
+}
+function barChart(rows){
+ const w=640,h=250,pl=60,pb=28,pt=10,keys=[['consulta','var(--gold)'],['producto','var(--info)'],['capacitacion','var(--stone)']];
+ const tot=rows.map(r=>r.consulta+r.producto+r.capacitacion);const step=1e6;const max=Math.ceil(Math.max(...tot)/step)*step||step;
+ const y=v=>pt+(h-pt-pb)*(1-v/max);const bw=(w-pl-10)/rows.length;
+ let g='';for(let v=0;v<=max;v+=step){g+=`<line x1="${pl}" x2="${w-10}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)"/><text x="${pl-8}" y="${y(v)+4}" text-anchor="end" font-size="11" fill="var(--muted)" font-family="DM Mono,monospace">${shortMoney(v)}</text>`}
+ rows.forEach((r,i)=>{let acc=0;const x=pl+i*bw+bw*.22;keys.forEach(([k,c])=>{if(!r[k])return;const y1=y(acc+r[k]),y0=y(acc);g+=`<rect x="${x}" y="${y1}" width="${bw*.56}" height="${Math.max(0,y0-y1)}" fill="${c}"><title>${k}: ${money(r[k])}</title></rect>`;acc+=r[k]});
+  g+=`<text x="${x+bw*.28}" y="${h-8}" text-anchor="middle" font-size="11" fill="var(--muted)" font-family="Jost,sans-serif">${dt(r.m+'-15',{month:'short'})}</text>`});
+ return `<div class="chart"><svg viewBox="0 0 ${w} ${h}" role="img" aria-label="${L('Ingresos cobrados por mes','Collected revenue by month')}">${g}</svg></div><div class="legend"><span><i style="background:var(--gold)"></i>${L('Consultas','Consultations')}</span><span><i style="background:var(--info)"></i>${L('Productos','Products')}</span><span><i style="background:var(--stone)"></i>${L('Capacitaciones','Trainings')}</span></div>`;
+}
+function aDash(){
+ const m=monthly();const cur=m[m.length-1];const totalCur=cur.consulta+cur.producto+cur.capacitacion;
+ const oct=a=>a.start.startsWith('2026-10');const ap=S.appts.filter(oct);
+ const bud=S.budgets.filter(b=>b.date.startsWith('2026-10'));const budAcc=S.budgets.filter(b=>b.status==='aceptado').length;
+ const pendingPays=S.pays.filter(p=>p.status==='pending');const refunds=S.pays.filter(p=>p.status==='refunded'||p.status==='partial_refund');
+ const newPat=PATIENTS.filter(p=>p.since.startsWith('2026-10')).length;
+ const k=(l,v,s)=>`<div class="kpi"><span class="l">${l}</span><span class="v">${v}</span>${s?`<span class="s">${s}</span>`:''}</div>`;
+ const fun=[[L('Consultas nuevas','New inquiries'),[0,1,2]],[L('En evaluación','In evaluation'),[3,4,5]],[L('Con presupuesto','With quote'),[6,7]],[L('Procedimiento','Procedure'),[8,9,10,11]]].map(([l,st])=>[l,S.leads.filter(x=>st.includes(x.stage)).length]);
+ const fmax=Math.max(...fun.map(f=>f[1]),1);
+ return `<div class="row between"><div><span class="eyebrow">${L('Octubre 2026 · datos ficticios','October 2026 · fictitious data')}</span><h1>${L('Buen día, doctor','Good morning, doctor')}</h1></div><button class="btn sm" data-act="sub" data-arg="solicitudes">${S.appts.filter(a=>a.status==='pagado').length} ${L('solicitudes por confirmar','requests to confirm')}</button></div>
+ <div class="kpis">${k(L('Cobrado en el mes','Collected this month'),shortMoney(totalCur),L('neto de reembolsos','net of refunds'))}${k(L('Consultas','Consultations'),shortMoney(cur.consulta))}${k(L('Productos','Products'),shortMoney(cur.producto))}${k(L('Capacitaciones','Trainings'),shortMoney(cur.capacitacion))}${k(L('Pagos pendientes','Pending payments'),pendingPays.length,money(pendingPays.reduce((a,p)=>a+p.amount,0)))}${k(L('Reembolsos','Refunds'),refunds.length,money(refunds.reduce((a,p)=>a+(p.refunded||0),0)))}</div>
+ <div class="grid2" style="align-items:start"><div class="card"><span class="eyebrow">${L('Evolución mensual de ingresos cobrados','Monthly collected revenue')}</span>${barChart(m)}</div>
+ <div class="card"><span class="eyebrow">${L('Embudo comercial (CRM)','Sales funnel (CRM)')}</span>${fun.map(([l,n])=>`<div style="display:grid;gap:4px"><div class="row between small"><span>${l}</span><span class="mono">${n}</span></div><div style="height:8px;background:var(--surface)"><div style="height:100%;width:${n/fmax*100}%;background:var(--gold)"></div></div></div>`).join('')}<div class="list-row"><span>${L('Tasa de conversión de presupuestos','Quote conversion rate')}</span><b class="mono" style="font-weight:500">${Math.round(budAcc/S.budgets.length*100)}%</b></div></div></div>
+ <div class="kpis">${k(L('Turnos solicitados','Requested'),ap.length)}${k(L('Confirmados','Confirmed'),ap.filter(a=>['confirmado','realizada'].includes(a.status)).length)}${k(L('Cancelados','Cancelled'),ap.filter(a=>a.status==='cancelado').length)}${k(L('Presenciales','In person'),ap.filter(a=>a.type==='pres').length)}${k(L('Videoconsultas','Video'),ap.filter(a=>a.type==='video').length)}${k(L('Pacientes nuevos','New patients'),newPat)}${k(L('Presupuestos emitidos','Quotes issued'),bud.length)}${k(L('Presupuestos aceptados','Quotes accepted'),budAcc)}${k(L('Cirugías realizadas','Surgeries done'),S.surgeries.filter(s=>s.date.startsWith('2026-10')).length,L('según registro clínico','per clinical record'))}</div>
+ <div class="notice"><b>${L('Cobrado ≠ facturado ≠ ganancia.','Collected ≠ invoiced ≠ profit.')}</b> ${L('Facturación requiere integración con ARCA (no conectada). La ganancia neta no se calcula hasta registrar costos. Las cirugías provienen del registro clínico, no de los pagos.','Invoicing requires ARCA integration (not connected). Net profit is not calculated until costs are recorded. Surgeries come from the clinical record, not from payments.')}</div>`;
+}
+function aFin(){
+ const rq=S.pays.filter(p=>p.status==='refund_requested');const ex=S.appts.filter(a=>a.status==='cancelado'&&PAY(a.pay)?.noRefund);
+ return `<div><span class="eyebrow">${L('Finanzas','Finance')}</span><h1>${L('Pagos, honorarios y reembolsos','Payments, fees and refunds')}</h1></div>
+ <div class="card"><span class="eyebrow">${L('Honorarios por tipo de consulta','Fees by consultation type')}</span><div class="grid2" style="gap:14px"><div class="field"><label for="fee-pres">${L('Presencial (ARS)','In person (ARS)')}</label><input id="fee-pres" type="number" value="${S.fees.pres}"></div><div class="field"><label for="fee-video">${L('Videoconsulta (ARS)','Video (ARS)')}</label><input id="fee-video" type="number" value="${S.fees.video}"></div></div><div class="field" style="max-width:260px"><label for="pol-h">${L('Horas mínimas para reembolso','Minimum hours for refund')}</label><input id="pol-h" type="number" value="${S.policy.refundHours}"></div><div><button class="btn sm" data-act="feeSave">${L('Guardar','Save')}</button></div></div>
+ <div class="card"><span class="eyebrow">${L('Reembolsos a autorizar','Refunds to authorize')}</span>${rq.map(p=>`<div class="list-row"><div><b style="font-weight:500">${payLabel(p)}</b><div class="tiny muted">${money(p.amount)} · ${p.reason==='clinica'?L('Cancelación de la clínica','Clinic cancellation'):L('Cancelación con +24 h','Cancelled with 24h+ notice')}</div></div><div class="row"><button class="btn sm" data-act="refund" data-arg="${p.id}:full">${L('Total','Full')}</button><button class="btn sm ghost" data-act="refund" data-arg="${p.id}:half">${L('Parcial 50%','Partial 50%')}</button><button class="btn sm ghost" data-act="refund" data-arg="${p.id}:deny">${L('Denegar','Deny')}</button></div></div>`).join('')||`<p class="muted small">${L('Sin reembolsos pendientes.','No pending refunds.')}</p>`}</div>
+ <div class="card"><span class="eyebrow">${L('Cancelaciones sin reembolso automático','Cancellations without automatic refund')}</span>${ex.map(a=>`<div class="list-row"><div><b style="font-weight:500">${P(a.pid).name}</b><div class="tiny muted">${dt(a.start)} · ${L('cancelado con menos de 24 h','cancelled with under 24h')}</div></div><button class="btn sm ghost" data-act="exception" data-arg="${a.pay}">${L('Autorizar excepción','Authorize exception')}</button></div>`).join('')||`<p class="muted small">—</p>`}</div>
+ <div><span class="eyebrow">${L('Todos los pagos','All payments')}</span></div>${payRows(S.pays.slice().sort((a,b)=>b.date.localeCompare(a.date)))}`;
+}
+function freeSlots(n){const out=[];bizDays(10).forEach(d=>slotsOf(d).forEach(s=>{if(slotState(s)==='free'&&out.length<n)out.push(s)}));return out}
+function aSol(){
+ const list=S.appts.filter(a=>a.status==='pagado');const fs=freeSlots(12);
+ return `<div><span class="eyebrow">${L('Pagadas · esperan confirmación','Paid · awaiting confirmation')}</span><h1>${L('Solicitudes de turno','Appointment requests')}</h1></div>
+ ${list.map(a=>`<div class="card"><div class="row between"><div><h3 style="font-size:1.4rem">${P(a.pid).name}</h3><span class="muted small">${dt(a.start)} · ${a.type==='video'?L('Videollamada','Video'):L('Presencial','In person')} · ${P(a.pid).city}</span></div>${chip(PAY(a.pay).status,PST)}</div>
+ <div class="row"><button class="btn sm" data-act="apptConfirm" data-arg="${a.id}">${L('Confirmar','Confirm')}</button><button class="btn sm ghost" data-act="apptReject" data-arg="${a.id}">${L('Rechazar (reintegro total)','Decline (full refund)')}</button></div>
+ <div class="row" style="flex-wrap:nowrap"><select id="prop-${a.id}" aria-label="${L('Nueva fecha','New date')}">${fs.map(s=>`<option value="${s}">${dt(s)}</option>`).join('')}</select><button class="btn sm ghost" data-act="apptPropose" data-arg="${a.id}">${L('Proponer','Propose')}</button></div></div>`).join('')||`<div class="card"><p class="muted">${L('No hay solicitudes pendientes. Reservá un turno desde el perfil Paciente para probar el flujo.','No pending requests. Book from the Patient profile to try the flow.')}</p></div>`}`;
+}
+function aAgenda(){
+ const days=bizDays(10);const day=S.agDay||days[0];const sur=S.role==='surgeon';
+ const up=S.appts.filter(a=>new Date(a.start)>=new Date(NOW.getTime()-12*36e5)&&!['cancelado','rechazado'].includes(a.status)).sort((a,b)=>a.start.localeCompare(b.start));
+ return `<div><span class="eyebrow">${L('Hora de Buenos Aires','Buenos Aires time')}</span><h1>${L('Agenda','Schedule')}</h1></div>
+ <div class="card"><span class="eyebrow">${L('Próximos turnos','Upcoming appointments')}</span>${up.map(a=>`<div class="list-row"><div><b style="font-weight:500">${dt(a.start)}</b> · ${P(a.pid).name} <span class="muted small">· ${a.type==='video'?L('Video','Video'):L('Presencial','In person')}</span></div><div class="row">${chip(a.status)}${a.status==='confirmado'?`<button class="btn sm ghost" data-act="remind" data-arg="${a.id}">${L('Recordatorio','Reminder')}</button>`:''}</div></div>`).join('')}</div>
+ <div class="card"><div class="row between"><span class="eyebrow">${L('Disponibilidad','Availability')}</span><span class="tiny muted">${sur?L('Tocá un horario libre para bloquearlo o desbloquearlo','Tap a free slot to block or unblock it'):L('Solo el cirujano define la disponibilidad','Only the surgeon sets availability')}</span></div>
+ <div class="days">${days.map(d=>`<button data-act="agDay" data-arg="${d}" class="${d===day?'on':''}"><span class="tiny">${dt(d,{weekday:'short'})}</span><b>${dt(d,{day:'numeric'})}</b></button>`).join('')}</div>
+ <div class="slots">${slotsOf(day).map(s=>{const st=slotState(s);const a=S.appts.find(x=>x.start===s&&!['cancelado','rechazado'].includes(x.status));return `<button ${sur&&(st==='free'||st==='blocked')?`data-act="block" data-arg="${s}"`:'disabled'} class="${st==='blocked'?'on':''}" title="${a?P(a.pid).name:st}" style="${st==='taken'?'opacity:1;text-decoration:none;background:var(--surface)':''}">${hm(s)}<br><span class="tiny" style="font-family:var(--f-body)">${st==='blocked'?L('bloq.','blocked'):st==='taken'?P(a.pid).name.split(' ')[0]:st==='held'?L('reserva','hold'):L('libre','free')}</span></button>`}).join('')}</div></div>
+ <div class="card"><span class="eyebrow">${L('Lista de espera','Waitlist')}</span>${S.waitlist.map(w=>`<div class="list-row"><div><b style="font-weight:500">${w.name}</b><div class="tiny muted">${w.type==='video'?L('Video','Video'):L('Presencial','In person')} · ${w.pref}</div></div><button class="btn sm ghost" data-act="wlOffer" data-arg="${w.id}">${L('Ofrecer primer turno libre','Offer first free slot')}</button></div>`).join('')||`<p class="muted small">${L('Lista vacía.','Empty.')}</p>`}</div>`;
+}
+function aCrm(){
+ const f=S.crmF||{q:'',ch:'',};const list=S.leads.filter(l=>(!f.q||l.proc.toLowerCase().includes(f.q.toLowerCase()))&&(!f.ch||l.channel===f.ch));
+ const chs=[...new Set(S.leads.map(l=>l.channel))];
+ return `<div><span class="eyebrow">${L('Recorrido comercial · separado de la historia clínica','Sales pipeline · separate from clinical records')}</span><h1>CRM</h1></div>
+ <div class="row"><input id="crm-q" placeholder="${L('Filtrar por tratamiento','Filter by treatment')}" value="${esc(f.q)}" style="max-width:260px" data-ch="crmQ"><select id="crm-ch" data-ch="crmCh" style="max-width:200px"><option value="">${L('Todos los canales','All channels')}</option>${chs.map(c=>`<option ${f.ch===c?'selected':''}>${c}</option>`).join('')}</select><span class="tiny muted">${list.length} ${L('oportunidades','opportunities')}</span></div>
+ <div class="kanban">${STAGES.map((s,i)=>{const it=list.filter(l=>l.stage===i);return `<div class="col"><h4>${L(s[0],s[1])}<span class="mono">${it.length}</span></h4>${it.map(l=>`<div class="lead"><span class="tiny mono muted">${l.id} · ${dd(l.date)}</span><b>${l.pid?P(l.pid).name:l.name}</b><span>${esc(l.proc)}</span><div class="chips"><span class="chip">${l.channel}</span><span class="chip">${l.owner}</span></div><span class="tiny muted">${L('Próxima tarea','Next task')}: ${esc(l.next)}</span><div class="row"><button data-act="lead" data-arg="${l.id}:-1" ${i===0?'disabled':''} aria-label="${L('Etapa anterior','Previous stage')}">←</button><button data-act="lead" data-arg="${l.id}:1" ${i===11?'disabled':''} aria-label="${L('Etapa siguiente','Next stage')}">→</button></div></div>`).join('')}</div>`}).join('')}</div>`;
+}
+function aPac(){return `<div><span class="eyebrow">${L('Seis pacientes ficticios','Six fictitious patients')}</span><h1>${L('Pacientes','Patients')}</h1></div><div class="tbl-wrap"><table><thead><tr><th>${L('Paciente','Patient')}</th><th>${L('Origen','From')}</th><th>${L('Canal','Channel')}</th><th>${L('Alta','Since')}</th><th>${L('Turnos','Appts')}</th><th></th></tr></thead><tbody>${PATIENTS.map(p=>`<tr><td>${p.name}${p.intl?` <span class="chip gold">${L('viaja','travels')}</span>`:''}</td><td>${p.city}, ${p.country}</td><td>${p.channel}</td><td>${dd(p.since)}</td><td class="num">${S.appts.filter(a=>a.pid===p.id).length}</td><td><button class="btn sm ghost" data-act="patient" data-arg="${p.id}">${L('Abrir','Open')}</button></td></tr>`).join('')}</tbody></table></div>`}
+function patientModal(pid){
+ const p=P(pid);const open=S.clinicOpen===pid;const canClin=S.role==='surgeon'||S.perms.clinica;
+ return `<div class="modal-h"><div><span class="eyebrow">${L('Ficha del paciente · ficticia','Patient record · fictitious')}</span><h2>${p.name}</h2></div><button class="x" data-act="close">✕</button></div>
+ <div class="grid2" style="align-items:start;gap:18px"><div class="card"><span class="eyebrow">${L('Datos comerciales','Commercial data')}</span>${S.budgets.filter(b=>b.pid===pid).map(b=>`<div class="list-row small"><span>${esc(b.proc)}</span>${chip(b.status,BST)}</div>`).join('')||'<p class="muted small">—</p>'}${S.appts.filter(a=>a.pid===pid).map(a=>`<div class="list-row small"><span>${dd(a.start)}</span>${chip(a.status)}</div>`).join('')}</div>
+ <div class="card"><span class="eyebrow">${L('Información clínica','Clinical information')}</span>${!canClin?`<p class="muted small">${L('Sin autorización para acceder a información clínica. El control se aplica en el servidor.','Not authorized to access clinical information. Enforced server-side.')}</p>`:open?`${S.surgeries.filter(s=>s.pid===pid).map(s=>`<div class="list-row small"><span>${s.proc}</span><span>${dd(s.date)}</span></div>`).join('')||'<p class="muted small">'+L('Sin procedimientos registrados.','No recorded procedures.')+'</p>'}${S.docs.filter(d=>d.pid===pid).map(d=>`<div class="list-row small"><span>${esc(d.name)}</span></div>`).join('')}<p class="tiny muted">${L('Acceso registrado en auditoría.','Access recorded in the audit log.')}</p>`:`<p class="muted small">${L('Almacenada por separado y cifrada. Cada acceso queda registrado.','Stored separately and encrypted. Every access is logged.')}</p><div><button class="btn sm" data-act="clinic" data-arg="${pid}">${L('Acceder a información clínica','Access clinical information')}</button></div>`}</div></div>`;
+}
+function aPres(){return `<div><h1>${L('Presupuestos','Quotes')}</h1></div>
+ <form class="card" data-form="budget" style="gap:14px"><span class="eyebrow">${L('Emitir presupuesto','Issue a quote')}</span><div class="grid2" style="gap:14px"><div class="field"><label for="bu-p">${L('Paciente','Patient')}</label><select id="bu-p">${PATIENTS.map(p=>`<option value="${p.id}">${p.name}</option>`).join('')}</select></div><div class="field"><label for="bu-a">${L('Importe (ARS)','Amount (ARS)')}</label><input id="bu-a" type="number" required value="1500000"></div></div><div class="field"><label for="bu-t">${L('Tratamiento o cirugía','Treatment or surgery')}</label><input id="bu-t" required value="Lifting de cejas"></div><div><button class="btn sm" type="submit">${L('Emitir y notificar','Issue and notify')}</button></div></form>
+ <div class="tbl-wrap"><table><thead><tr><th>ID</th><th>${L('Paciente','Patient')}</th><th>${L('Tratamiento','Treatment')}</th><th>${L('Estado','Status')}</th><th style="text-align:right">${L('Importe','Amount')}</th></tr></thead><tbody>${S.budgets.map(b=>`<tr><td class="mono">${b.id.toUpperCase()}</td><td>${P(b.pid).name}</td><td>${esc(b.proc)}${b.question?`<div class="tiny" style="color:var(--warn)">“${esc(b.question)}”</div>`:''}</td><td>${chip(b.status,BST)}</td><td class="num">${money(b.amount)}</td></tr>`).join('')}</tbody></table></div>`}
+function aSeg(){const pid=S.segP||'p1';return `<div><h1>${L('Seguimiento posoperatorio','Post-op follow-up')}</h1></div><div class="row"><select id="seg-p" data-ch="segP" style="max-width:280px">${PATIENTS.map(p=>`<option value="${p.id}" ${p.id===pid?'selected':''}>${p.name}</option>`).join('')}</select></div>
+ <div class="card">${thread(pid,'doc')}<div class="field"><label for="msg-in">${L('Respuesta del médico','Doctor\'s reply')}</label><textarea id="msg-in"></textarea></div><div class="row between"><input type="file" id="msg-file" style="max-width:320px"><button class="btn sm" data-act="sendMsg" data-arg="doc">${L('Enviar','Send')}</button></div></div>
+ <form class="card" data-form="doc" style="gap:12px"><span class="eyebrow">${L('Publicar documento médico','Publish medical document')}</span><div class="grid2" style="gap:12px"><div class="field"><label for="doc-n">${L('Nombre','Name')}</label><input id="doc-n" required value="Indicaciones de control (ficticio).pdf"></div><div class="field"><label for="doc-t">${L('Tipo','Type')}</label><select id="doc-t"><option>Indicaciones</option><option>Estudio</option><option>Receta</option></select></div></div><p class="tiny muted">${L('Solo profesionales habilitados pueden crear documentos clínicos. Las recetas requieren la plataforma de prescripción electrónica.','Only licensed professionals can create clinical documents. Prescriptions require the e-prescription platform.')}</p><div><button class="btn sm" type="submit">${L('Publicar y avisar','Publish and notify')}</button></div></form>`}
+function aShop(){const sur=S.role==='surgeon';return `<div><h1>${sur?L('Tienda','Shop'):L('Pedidos','Orders')}</h1></div>
+ ${sur?`<div class="tbl-wrap"><table><thead><tr><th>${L('Producto','Product')}</th><th>${L('Legal','Legal')}</th><th>${L('Activo','Active')}</th><th>Stock</th><th>${L('Precio (ARS)','Price (ARS)')}</th></tr></thead><tbody>${S.products.map(p=>`<tr><td>${p.name}<div class="tiny muted">${p[S.lang]}</div></td><td>${p.legal==='ok'?`<span class="chip ok">OK</span>`:p.legal==='revisar'?`<span class="chip warn">${L('Revisar','Review')}</span>`:`<span class="chip bad">${L('No vendible online','Not sellable online')}</span>`}</td><td><button class="toggle ${p.active?'on':''}" data-act="prodToggle" data-arg="${p.id}" ${p.legal==='bloqueado'?'disabled':''} aria-label="${L('Activo','Active')}"></button></td><td>${p.stock===null?'∞':`<div class="row" style="flex-wrap:nowrap"><button class="icon-btn" data-act="stock" data-arg="${p.id}:-1">−</button><span class="mono">${p.stock}</span><button class="icon-btn" data-act="stock" data-arg="${p.id}:1">+</button></div>`}</td><td><div class="row" style="flex-wrap:nowrap"><input id="pr-${p.id}" type="number" value="${p.price}" style="width:110px"><button class="btn sm ghost" data-act="price" data-arg="${p.id}">OK</button></div></td></tr>`).join('')}</tbody></table></div>
+ <div class="notice"><b>Fit Complements:</b> ${L('contiene medicación. No se publica hasta contar con revisión legal y regulatoria (ANMAT). El colágeno queda en revisión como suplemento.','contains medication. Not published until legal and regulatory review (ANMAT). Collagen stays under review as a supplement.')}</div>`:''}
+ <div class="tbl-wrap"><table><thead><tr><th>${L('Pedido','Order')}</th><th>${L('Cliente','Customer')}</th><th>${L('Ítems','Items')}</th><th>${L('Estado','Status')}</th><th style="text-align:right">Total</th></tr></thead><tbody>${S.orders.map(o=>`<tr><td class="mono">${o.id.toUpperCase()}</td><td>${o.pid?P(o.pid).name:L('Invitado demo','Demo guest')}</td><td>${o.items.map(([k,q])=>S.products.find(p=>p.id===k).name+' × '+q).join(', ')}</td><td>${o.status==='pago_pendiente'?chip(o.status,OST):`<select data-ch="orderSt" data-id="${o.id}" aria-label="${L('Estado','Status')}">${['preparando','listo','entregado'].map(s=>`<option value="${s}" ${o.status===s?'selected':''}>${L(OST[s][0],OST[s][1])}</option>`).join('')}</select>`}</td><td class="num">${money(o.total)}</td></tr>`).join('')}</tbody></table></div><p class="tiny muted">${L('Al marcar “Listo” se envía un aviso para coordinar retiro o envío por WhatsApp. No hay envíos automáticos con transportistas.','Marking “Ready” sends a notice to arrange pickup or delivery on WhatsApp. No automatic carrier shipping.')}</p>`}
+function aWs(){return `<div><h1>${L('Capacitaciones','Trainings')}</h1></div>${S.workshops.map(w=>`<div class="card"><div class="row between"><div><h3 style="font-size:1.4rem">${w[S.lang]}</h3><span class="muted small">${dd(w.date)} · ${w.mode} · ${money(w.ars)} / ${money(w.usd,'USD')}</span></div><div class="row"><span class="small">${w.published?L('Publicado','Published'):L('Borrador','Draft')}</span><button class="toggle ${w.published?'on':''}" data-act="wsPub" data-arg="${w.id}" aria-label="${L('Publicar','Publish')}"></button></div></div>
+ ${S.enrolls.filter(e=>e.wid===w.id).map(e=>`<div class="list-row small"><span>${D(e.did).name} · ${D(e.did).spec} · ${D(e.did).country}</span><div class="row">${chip(e.status,EST)}${e.status==='verificacion'?`<button class="btn sm ghost" data-act="verify" data-arg="${e.id}">${L('Verificar matrícula','Verify license')}</button>`:''}</div></div>`).join('')}</div>`).join('')}<p class="tiny muted">${L('Al publicar, se avisa solo a profesionales con consentimiento vigente para cada canal.','On publishing, only professionals with active consent for each channel are notified.')}</p>`}
+function aPros(){const f=S.proF||{spec:'',country:''};const specs=[...new Set(PROS.map(p=>p.spec))],cs=[...new Set(PROS.map(p=>p.country))];const list=PROS.filter(p=>(!f.spec||p.spec===f.spec)&&(!f.country||p.country===f.country));
+ return `<div><span class="eyebrow">${L('Separado de los expedientes clínicos','Separate from clinical records')}</span><h1>${L('CRM de profesionales','Professionals CRM')}</h1></div>
+ <div class="row"><select data-ch="proSpec" style="max-width:220px"><option value="">${L('Todas las especialidades','All specialties')}</option>${specs.map(s=>`<option ${f.spec===s?'selected':''}>${s}</option>`).join('')}</select><select data-ch="proCountry" style="max-width:200px"><option value="">${L('Todos los países','All countries')}</option>${cs.map(s=>`<option ${f.country===s?'selected':''}>${s}</option>`).join('')}</select></div>
+ <div class="tbl-wrap"><table><thead><tr><th>${L('Profesional','Professional')}</th><th>${L('Especialidad','Specialty')}</th><th>${L('País','Country')}</th><th>${L('Intereses','Interests')}</th><th>${L('Capacitaciones','Trainings')}</th><th>${L('Consentimiento','Consent')}</th></tr></thead><tbody>${list.map(p=>`<tr><td>${p.name}${p.verified?'':` <span class="chip info">${L('sin verificar','unverified')}</span>`}</td><td>${p.spec}</td><td>${p.country}</td><td>${p.interests.join(', ')}</td><td>${S.enrolls.filter(e=>e.did===p.id).map(e=>chip(e.status,EST)).join(' ')||'—'}</td><td class="small">Email ${p.consent.email?'✓':'✕'} · WA ${p.consent.wa?'✓':'✕'}</td></tr>`).join('')}</tbody></table></div>
+ <form class="card" data-form="campaign" style="gap:12px"><span class="eyebrow">${L('Campaña informativa al segmento filtrado','Informational campaign to the filtered segment')}</span><div class="field"><label for="cp-s">${L('Asunto','Subject')}</label><input id="cp-s" required value="${L('Nuevas fechas de workshops','New workshop dates')}"></div><p class="tiny muted">${L(`Destinatarios con consentimiento de email: ${list.filter(p=>p.consent.email).length} de ${list.length}.`,`Recipients with email consent: ${list.filter(p=>p.consent.email).length} of ${list.length}.`)}</p><div><button class="btn sm" type="submit">${L('Enviar (demo)','Send (demo)')}</button></div></form>`}
+function aCont(){return `<div><h1>${L('Contenidos','Content')}</h1></div>
+ <div class="card"><span class="eyebrow">${L('Testimonios · moderación','Testimonials · moderation')}</span>${S.testimonials.map(t=>`<div class="list-row"><div style="flex:1"><p>“${t.text[S.lang]}”</p><div class="tiny muted">${t.by} · ${t.consent?L('consentimiento firmado','consent signed'):L('sin consentimiento: no publicable','no consent: cannot publish')}</div></div><button class="toggle ${t.published?'on':''}" data-act="testi" data-arg="${t.id}" ${t.consent?'':'disabled'} aria-label="${L('Publicar','Publish')}"></button></div>`).join('')}</div>
+ <form class="card" data-form="bio" style="gap:12px"><span class="eyebrow">${L('Perfil del médico','Doctor profile')}</span><div class="field"><label for="bio-es">${L('Biografía (ES)','Biography (ES)')}</label><textarea id="bio-es">${esc(S.bio.es)}</textarea></div><div class="field"><label for="bio-en">${L('Biografía (EN)','Biography (EN)')}</label><textarea id="bio-en">${esc(S.bio.en)}</textarea></div><div><button class="btn sm" type="submit">${L('Guardar y publicar','Save and publish')}</button></div></form>
+ <div class="card"><span class="eyebrow">FAQ</span><p class="muted small">${FAQ().length} ${L('categorías','categories')} · ${FAQ().reduce((a,c)=>a+c.q.length,0)} ${L('preguntas publicadas','published questions')}</p></div>`}
+function seoChecks(p){return [
+ ['tech',L('Título 30–60 caracteres','Title 30–60 chars'),p.title.length>=30&&p.title.length<=60,p.title.length],
+ ['tech',L('Meta descripción 70–160','Meta description 70–160'),p.desc.length>=70&&p.desc.length<=160,p.desc.length],
+ ['tech','H1',p.h1],['tech',L('Textos alternativos','Alt texts'),p.alts===0,p.alts?p.alts+' '+L('faltan','missing'):''],
+ ['tech','hreflang ES/EN',p.hreflang],['tech','Schema.org',!!p.schema,p.schema],
+ ['edit',L('Revisión médica con fecha','Dated medical review'),!!p.reviewed,p.reviewed]]}
+function aSeo(){
+ const score=p=>{const c=seoChecks(p);return Math.round(c.filter(x=>x[2]).length/c.length*100)};
+ const ld={'@context':'https://schema.org','@type':'MedicalClinic',name:'Clínica Bujanda',url:'https://www.clinicabujanda.com',telephone:'+54-11-4777-9638',address:{'@type':'PostalAddress',streetAddress:'Av. Cabildo 875, 2° A',addressLocality:'Ciudad Autónoma de Buenos Aires',addressCountry:'AR'},medicalSpecialty:'PlasticSurgery',openingHours:'Mo-Fr 10:00-20:00'};
+ return `<div><span class="eyebrow">${L('Buscadores y motores de respuesta con IA','Search engines and AI answer engines')}</span><h1>${L('Centro de visibilidad SEO / GEO','SEO / GEO visibility center')}</h1></div>
+ <div class="chips"><span class="chip ok">${L('Verificación técnica real','Real technical check')}</span><span class="chip warn">${L('Recomendación editorial','Editorial recommendation')}</span><span class="chip info">${L('Requiere servicio externo','Needs external service')}</span></div>
+ <div class="card"><span class="eyebrow">${L('Hallazgos en el sitio actual','Findings on the current site')}</span>
+ ${[[L('La meta descripción afirma “el mejor cirujano plástico de Buenos Aires”. Los superlativos pueden contradecir normas de publicidad médica; se reemplaza por información verificable.','The meta description claims “the best plastic surgeon in Buenos Aires”. Superlatives may breach medical advertising rules; replaced with verifiable information.'),'warn'],[L('El footer conserva un texto de plantilla (“© 2023 de Spa Serenidad”).','The footer keeps template text (“© 2023 de Spa Serenidad”).'),'ok'],[L('Varios ítems del menú apuntan a la home en lugar de su página.','Several menu items point to the home page instead of their own page.'),'ok'],[L('Categorías femenino/masculino invertidas en tratamientos quirúrgicos.','Female/male categories swapped in surgical treatments.'),'ok'],[L('Sitio solo en español: sin hreflang ni versión en inglés.','Spanish-only site: no hreflang or English version.'),'ok'],[L('Sin datos estructurados de clínica, médico ni procedimientos.','No structured data for clinic, physician or procedures.'),'ok']].map(([t,c])=>`<div class="list-row"><span style="flex:1;min-width:220px">${t}</span><span class="chip ${c}">${c==='ok'?L('Técnico','Technical'):L('Editorial','Editorial')}</span></div>`).join('')}</div>
+ <div class="tbl-wrap"><table><thead><tr><th>URL</th><th>${L('Título','Title')}</th><th>${L('Puntaje','Score')}</th><th>${L('Alertas','Alerts')}</th><th></th></tr></thead><tbody>${S.seo.map((p,i)=>`<tr><td class="mono small">${p.path}</td><td class="small">${esc(p.title)}</td><td class="num">${score(p)}%</td><td>${seoChecks(p).filter(c=>!c[2]).map(c=>`<span class="chip ${c[0]==='tech'?'ok':'warn'}" style="margin:2px">${c[1]}${c[3]!==undefined&&c[3]!==''&&c[3]!==false?' · '+c[3]:''}</span>`).join('')||`<span class="chip ok">${L('Sin alertas','No alerts')}</span>`}</td><td><button class="btn sm ghost" data-act="seoEdit" data-arg="${i}">${L('Editar','Edit')}</button></td></tr>`).join('')}</tbody></table></div>
+ <div class="grid2" style="align-items:start"><div class="card"><span class="eyebrow">${L('Redirecciones 301 desde el sitio actual','301 redirects from the current site')}</span>${S.redirects.map(([a,b])=>`<div class="list-row mono small"><span>${a}</span><span>→ ${b}</span></div>`).join('')}</div>
+ <div class="card"><span class="eyebrow">JSON-LD · MedicalClinic</span><div class="tbl-wrap" style="border:0"><pre class="mono tiny" style="margin:0;white-space:pre">${esc(JSON.stringify(ld,null,2))}</pre></div><p class="tiny muted">${L('Solo propiedades verificadas. Physician, MedicalProcedure, Article y BreadcrumbList se generan por página.','Verified properties only. Physician, MedicalProcedure, Article and BreadcrumbList are generated per page.')}</p></div></div>
+ <div class="card"><div class="row between"><span class="eyebrow">${L('Registro de pruebas en buscadores con IA','AI search test log')}</span><span class="chip info">${L('Manual · sin posicionamiento garantizado','Manual · no ranking guaranteed')}</span></div>
+ ${S.aiTests.map(t=>`<div class="list-row small"><span>${dd(t.date)} · <b style="font-weight:500">${t.engine}</b> · “${esc(t.q)}”</span><span class="chip ${t.mentioned?'ok':''}">${t.mentioned?L('Mencionada','Mentioned'):L('No mencionada','Not mentioned')}</span></div>`).join('')}
+ <form data-form="aitest" class="row" style="margin-top:8px"><select id="ai-e" style="max-width:150px"><option>ChatGPT</option><option>Gemini</option><option>Perplexity</option><option>Claude</option></select><input id="ai-q" required placeholder="${L('Consulta probada','Query tested')}" style="flex:1;min-width:180px"><label class="check" style="align-items:center"><input type="checkbox" id="ai-m"> ${L('Mencionada','Mentioned')}</label><button class="btn sm" type="submit">${L('Registrar','Log')}</button></form>
+ <p class="tiny muted">${L('Search Console, Core Web Vitals de campo y rankings requieren conectar servicios externos.','Search Console, field Core Web Vitals and rankings require external services.')}</p></div>`;
+}
+function seoModal(i){const p=S.seo[i];return `<div class="modal-h"><div><span class="eyebrow">SEO</span><h2 class="mono" style="font-size:1.2rem">${p.path}</h2></div><button class="x" data-act="close">✕</button></div>
+ <form data-form="seo" data-i="${i}" style="display:grid;gap:14px"><div class="field"><label for="seo-t">${L('Título SEO','SEO title')} <span id="seo-tc" class="mono">${p.title.length}</span></label><input id="seo-t" value="${esc(p.title)}" data-ch="count" data-target="seo-tc"></div><div class="field"><label for="seo-d">${L('Meta descripción','Meta description')} <span id="seo-dc" class="mono">${p.desc.length}</span></label><textarea id="seo-d" data-ch="count" data-target="seo-dc">${esc(p.desc)}</textarea></div><div class="grid2" style="gap:14px"><div class="field"><label for="seo-r">${L('Fecha de revisión médica','Medical review date')}</label><input id="seo-r" type="date" value="${p.reviewed}"></div><div class="field"><label for="seo-a">${L('Imágenes sin alt','Images missing alt')}</label><input id="seo-a" type="number" min="0" value="${p.alts}"></div></div><label class="check"><input type="checkbox" id="seo-h" ${p.hreflang?'checked':''}> hreflang ES/EN</label><div><button class="btn" type="submit">${L('Guardar','Save')}</button></div></form>`}
+function aPerm(){const lab={solicitudes:L('Solicitudes de turno','Appointment requests'),agenda:L('Agenda y reprogramaciones','Schedule and rescheduling'),pagos:L('Estado de pagos (lectura)','Payment status (read)'),recordatorios:L('Recordatorios','Reminders'),crm:'CRM',tienda:L('Pedidos de la tienda','Shop orders'),capacitaciones:L('Capacitaciones','Trainings'),clinica:L('Información clínica de pacientes','Patient clinical information')};
+ return `<div><span class="eyebrow">${L('Secretaría','Secretary')}</span><h1>${L('Permisos','Permissions')}</h1></div><div class="notice"><b>${L('Se aplican en el servidor.','Enforced server-side.')}</b> ${L('Ocultar un módulo no alcanza: cada endpoint valida el permiso. El acceso clínico requiere justificación legal.','Hiding a module is not enough: every endpoint checks the permission. Clinical access requires a legal basis.')}</div>
+ <div class="card">${Object.keys(S.perms).map(k=>`<div class="list-row"><span>${lab[k]}${k==='clinica'?` <span class="chip bad">${L('sensible','sensitive')}</span>`:''}</span><button class="toggle ${S.perms[k]?'on':''}" data-act="perm" data-arg="${k}" aria-pressed="${S.perms[k]}" aria-label="${lab[k]}"></button></div>`).join('')}</div><div><button class="btn sm ghost" data-act="roleTo" data-arg="secretary">${L('Ver como Secretaría','View as Secretary')}</button></div>`}
+function aNotif(){return `<div><h1>${L('Notificaciones','Notifications')}</h1></div><div class="notice">${L('Email por proveedor transaccional y WhatsApp Business con plantillas aprobadas por Meta. Los avisos nunca incluyen diagnósticos ni recetas: dirigen al portal seguro.','Email via transactional provider and WhatsApp Business with Meta-approved templates. Notices never include diagnoses or prescriptions: they point to the secure portal.')}</div>
+ <div class="tbl-wrap"><table><thead><tr><th>${L('Fecha','Date')}</th><th>${L('Canal','Channel')}</th><th>${L('Destinatario','Recipient')}</th><th>${L('Plantilla','Template')}</th><th>${L('Texto','Text')}</th></tr></thead><tbody>${S.notif.slice(0,30).map(n=>`<tr><td class="small">${dt(n.at)}</td><td>${n.ch==='whatsapp'?'WhatsApp':'Email'}</td><td>${esc(n.to)}</td><td class="mono small">${n.tpl}</td><td class="small muted">${TPL[n.tpl]?L(TPL[n.tpl][0],TPL[n.tpl][1]):''}</td></tr>`).join('')}</tbody></table></div><p class="tiny muted">${L('Estado de envío: simulado. Requiere credenciales del proveedor.','Delivery status: simulated. Needs provider credentials.')}</p>`}
+function aAudit(){return `<div><h1>${L('Auditoría','Audit log')}</h1></div><div class="tbl-wrap"><table><thead><tr><th>${L('Fecha','Date')}</th><th>${L('Usuario','User')}</th><th>${L('Acción','Action')}</th></tr></thead><tbody>${S.audit.map(a=>`<tr><td class="small">${dt(a.at)}</td><td>${esc(a.who)}</td><td>${esc(a.what)}</td></tr>`).join('')}</tbody></table></div>`}
+function aTasks(){return `<div><span class="eyebrow">${L('Panel de secretaría','Secretary panel')}</span><h1>${L('Mis tareas','My tasks')}</h1></div><div class="kpis"><div class="kpi"><span class="l">${L('Solicitudes por confirmar','Requests to confirm')}</span><span class="v">${S.appts.filter(a=>a.status==='pagado').length}</span></div><div class="kpi"><span class="l">${L('Turnos hoy','Today')}</span><span class="v">${S.appts.filter(a=>ymd(a.start)===ymd(NOW.toISOString())&&a.status==='confirmado').length}</span></div><div class="kpi"><span class="l">${L('Pedidos a coordinar','Orders to coordinate')}</span><span class="v">${S.orders.filter(o=>o.status==='listo').length}</span></div></div>
+ <div class="card">${S.tasks.map(t=>`<label class="list-row" style="justify-content:flex-start;cursor:pointer"><input type="checkbox" style="width:auto" data-ch="task" data-id="${t.id}" ${t.done?'checked':''}><span style="${t.done?'text-decoration:line-through;color:var(--muted)':''}">${t.text}</span></label>`).join('')}<form data-form="task" class="row" style="margin-top:8px;flex-wrap:nowrap"><input id="task-in" required placeholder="${L('Nueva tarea','New task')}"><button class="btn sm" type="submit">${L('Agregar','Add')}</button></form></div>`}
+function aRem(){const list=S.appts.filter(a=>a.status==='confirmado'&&new Date(a.start)>NOW);return `<div><h1>${L('Recordatorios','Reminders')}</h1></div><div class="card">${list.map(a=>`<div class="list-row"><span>${dt(a.start)} · ${P(a.pid).name}</span><button class="btn sm ghost" data-act="remind" data-arg="${a.id}">${a.reminded?L('Reenviar','Resend'):L('Enviar recordatorio','Send reminder')}</button></div>`).join('')}</div>`}
+
+/* ---------- MODALS ---------- */
+function modal(){
+ if(!S.modal)return '';const m=S.modal;let c='';
+ if(m.t==='roles')c=`<div class="modal-h"><div><span class="eyebrow">${L('Demostración','Demo')}</span><h2>${L('Elegí un perfil para recorrer','Pick a profile to explore')}</h2></div><button class="x" data-act="close">✕</button></div><div class="roles">${[['visitor',L('Visitante','Visitor'),L('Sitio público bilingüe','Bilingual public site')],['patient','Lucía Ferrer',L('Paciente internacional (ficticia)','International patient (fictitious)')],['pro','Dra. Ana Lorenzo',L('Profesional médica (ficticia)','Physician (fictitious)')],['surgeon','Dr. Diego Bujanda',L('Administrador principal','Main administrator')],['secretary',L('Secretaría','Secretary'),L('Panel de tareas con permisos','Task panel with permissions')]].map(([k,n,d])=>`<button data-act="roleTo" data-arg="${k}" class="${S.role===k?'on':''}"><span class="eyebrow">${d}</span><b>${n}</b></button>`).join('')}</div><p class="tiny muted">${L('Los cambios que hagas en un perfil se reflejan en los demás durante esta sesión.','Changes made in one profile show up in the others during this session.')}</p>`;
+ if(m.t==='proc')c=procModal(m.arg);
+ if(m.t==='cart')c=cartModal();
+ if(m.t==='patient')c=patientModal(m.arg);
+ if(m.t==='seo')c=seoModal(m.arg);
+ if(m.t==='mp'){const x=S.mp;c=`<div class="modal-h"><div><span class="eyebrow">Mercado Pago · Checkout Pro</span><h2>${money(x.amount)}</h2></div><button class="x" data-act="mpCancel">✕</button></div><div class="mp"><div class="mp-h"><span>${L('ENTORNO DE PRUEBAS · sin cobro real','TEST ENVIRONMENT · no real charge')}</span><span class="mono">pref_${x.ref}</span></div><div class="mp-b"><div class="list-row"><span>${esc(x.title)}</span><span class="mono">${money(x.amount)} ARS</span></div><p class="small muted">${L('En producción, el estado se registra solo cuando llega el webhook firmado de Mercado Pago, nunca por el retorno del navegador. Cada operación usa una clave de idempotencia.','In production, status is recorded only when Mercado Pago\'s signed webhook arrives, never from the browser return. Each operation uses an idempotency key.')}</p><div class="row"><button class="btn gold" data-act="mpOk">${L('Simular pago aprobado','Simulate approved payment')}</button><button class="btn ghost" data-act="mpNo">${L('Simular rechazo','Simulate rejection')}</button></div></div></div>`}
+ if(m.t==='cancel'){const a=S.appts.find(x=>x.id===m.arg);const h=(new Date(a.start)-NOW)/36e5;const ok=h>=S.policy.refundHours;const same=ymd(a.start)===ymd(NOW.toISOString());
+  c=`<div class="modal-h"><h2>${L('Cancelar turno','Cancel appointment')}</h2><button class="x" data-act="close">✕</button></div><div class="list-row"><span>${dt(a.start)}</span><span class="mono">${Math.max(0,h).toFixed(1)} h ${L('restantes','left')}</span></div>
+  <div class="notice"><b>${ok?L('Elegible para reembolso.','Eligible for a refund.'):same?L('Cancelación el mismo día.','Same-day cancellation.'):L('Menos de 24 horas.','Less than 24 hours.')}</b> ${ok?L('El reembolso queda a autorizar por la clínica.','The refund will be authorized by the clinic.'):L('Podés cancelar, pero no se genera reembolso automático. La clínica puede evaluar excepciones.','You can cancel, but no automatic refund is issued. The clinic may consider exceptions.')}</div>
+  <div class="row"><button class="btn" data-act="cancelOk" data-arg="${a.id}">${L('Confirmar cancelación','Confirm cancellation')}</button><button class="btn ghost" data-act="close">${L('Volver','Back')}</button></div>`}
+ if(m.t==='receipt'){const p=PAY(m.arg);c=`<div class="modal-h"><div><span class="eyebrow">${L('Comprobante de pago · demo','Payment receipt · demo')}</span><h2 class="mono" style="font-size:1.4rem">${p.id.toUpperCase()}-MP-SANDBOX</h2></div><button class="x" data-act="close">✕</button></div>${[[L('Concepto','Item'),payLabel(p)],[L('Fecha','Date'),dd(p.date)],[L('Importe','Amount'),money(p.amount)],[L('Estado','Status'),L(PST[p.status][0],PST[p.status][1])],[L('Reembolsado','Refunded'),money(p.refunded||0)],[L('Medio','Method'),'Mercado Pago (sandbox)']].map(([k,v])=>`<div class="list-row"><span class="eyebrow">${k}</span><span>${v}</span></div>`).join('')}<p class="tiny muted">${L('No es una factura. La factura electrónica requiere integración con ARCA.','This is not an invoice. E-invoicing requires ARCA integration.')}</p>`}
+ if(m.t==='budget'){const b=S.budgets.find(x=>x.id===m.arg);c=`<div class="modal-h"><div><span class="eyebrow">${L('Presupuesto','Quote')} ${b.id.toUpperCase()} · ${L('ficticio','fictitious')}</span><h2>${esc(b.proc)}</h2></div><button class="x" data-act="close">✕</button></div>${[[L('Paciente','Patient'),P(b.pid).name],[L('Emitido','Issued'),dd(b.date)],[L('Honorarios médicos','Medical fees'),money(Math.round(b.amount*.7))],[L('Institución y equipo','Facility and team'),money(Math.round(b.amount*.3))],['Total',money(b.amount)],[L('Validez','Valid for'),L('30 días','30 days')]].map(([k,v])=>`<div class="list-row"><span class="eyebrow">${k}</span><span>${v}</span></div>`).join('')}<p class="tiny muted">${L('Documento comercial. No reemplaza al consentimiento informado. Descarga en PDF disponible en producción.','Commercial document. It does not replace informed consent. PDF download available in production.')}</p>`}
+ return `<div class="scrim" data-act="close" role="dialog" aria-modal="true"><div class="modal" data-act="noop">${c}</div></div>`;
+}
+
+/* ---------- ACTIONS ---------- */
+let toastT;function toast(msg){const el=document.getElementById('toast');el.innerHTML=`<div class="toast" role="status">${msg}</div>`;clearTimeout(toastT);toastT=setTimeout(()=>el.innerHTML='',3800)}
+const R=()=>render(true);
+const A={
+ noop(){},
+ go(a,b){go(a,b.dataset.sub)},
+ sub(a){S.sub=a;render()},
+ lang(a){S.lang=a;document.documentElement.lang=a;R()},
+ menu(){S.menu=!S.menu;R()},
+ roles(){S.modal={t:'roles'};R()},
+ close(){S.modal=null;R()},
+ roleTo(a){S.role=a;S.modal=null;if(a==='visitor')go('home');else go(a==='patient'?'patient':a==='pro'?'pro':'admin')},
+ portal(){if(S.role==='visitor'){S.modal={t:'roles'};R()}else go(S.role==='patient'?'patient':S.role==='pro'?'pro':'admin')},
+ slide(a){S.slide=(S.slide+Number(a)+SLIDES().length)%SLIDES().length;const h=document.getElementById('hero');if(h)h.innerHTML='<div class="wrap">'+heroInner()+'</div>';slider()},
+ treat(a){S.tFilter=a;S.tSex='all';go('treatments')},
+ tf(a){const [k,v]=a.split(':');S[k]=v;R()},
+ proc(a){S.modal={t:'proc',arg:a};R()},
+ book(a){S.modal=null;S.bk={step:1,type:null,day:null,slot:null,policy:false,proc:a||null};if(S.role==='patient'){S.view='patient';S.sub='reservar';render()}else{S.after='patient';S.view='auth';toast(L('Para reservar, ingresá a tu portal (demo).','To book, sign in to your portal (demo).'));render()}},
+ authTab(a){S.authTab=a;R()},
+ addCart(a){const c=S.cart.find(x=>x[0]===a);const p=S.products.find(x=>x.id===a);const q=c?c[1]:0;if(p.stock!==null&&q+1>p.stock){toast(L('No hay más stock disponible.','No more stock available.'));return}c?c[1]++:S.cart.push([a,1]);toast(`${p.name} ${L('agregado al carrito','added to cart')}`);R()},
+ cart(){S.modal={t:'cart'};R()},
+ qty(a){const [id,d]=a.split(':');const c=S.cart.find(x=>x[0]===id);const p=S.products.find(x=>x.id===id);c[1]+=Number(d);if(p.stock!==null&&c[1]>p.stock)c[1]=p.stock;if(c[1]<=0)S.cart=S.cart.filter(x=>x!==c);R()},
+ checkout(){const total=S.cart.reduce((a,[id,q])=>a+S.products.find(p=>p.id===id).price*q,0);S.mp={kind:'producto',amount:total,title:L('Signature Collection','Signature Collection'),ref:'cart'+Date.now().toString().slice(-5)};S.modal={t:'mp'};R()},
+ bkType(a){S.bk.type=a;S.bk.step=2;R()},
+ bkDay(a){S.bk.day=a;R()},
+ bkSlot(a){if(slotState(a)!=='free'){toast(L('Ese horario ya no está disponible.','That slot is no longer available.'));return}S.bk.slot=a;S.bk.step=3;S.hold={iso:a,until:Date.now()+10*60e3};S.otherHolds=S.otherHolds.filter(x=>x!==a);toast(L('Horario reservado por 10 minutos mientras completás el pago.','Slot held for 10 minutes while you complete payment.'));R()},
+ bkBack(){S.bk.step=1;R()},
+ bkRelease(){S.hold=null;S.bk.slot=null;S.bk.step=2;R()},
+ bkPay(){const b=S.bk;if(!S.hold){toast(L('La reserva temporal venció. Elegí un horario nuevamente.','The hold expired. Pick a time again.'));S.bk.step=2;R();return}if(slotState(b.slot)!=='free'){toast(L('El horario fue tomado. Elegí otro.','The slot was taken. Pick another.'));S.bk.step=2;R();return}
+  const id=nid('a'),pay=nid('y');S.appts.push({id,pid:ME.patient,type:b.type,start:b.slot,status:'pendiente_pago',pay,policyAt:new Date().toISOString(),note:b.proc||''});S.pays.push({id:pay,kind:'consulta',ref:id,amount:S.fees[b.type],status:'pending',date:ymd(NOW.toISOString())});b.appt=id;
+  S.mp={kind:'consulta',amount:S.fees[b.type],title:(b.type==='video'?L('Videoconsulta','Video consultation'):L('Consulta presencial','In-person consultation'))+' · '+dt(b.slot),ref:id,appt:id,pay};S.modal={t:'mp'};audit('Aceptó la política de cancelación e inició pago de turno');R()},
+ mpCancel(){if(S.mp?.kind==='consulta'){const a=S.appts.find(x=>x.id===S.mp.appt);if(a){S.appts=S.appts.filter(x=>x!==a);S.pays=S.pays.filter(p=>p.id!==S.mp.pay)}}S.mp=null;S.modal=null;R()},
+ mpOk(){const x=S.mp;
+  if(x.kind==='consulta'){const p=PAY(x.pay);p.status='approved';const a=S.appts.find(y=>y.id===x.appt);a.status='pagado';S.hold=null;S.bk.step=5;notify(P(ME.patient).name,'pago_aprobado');S.leads.push({id:'L-'+(1050+uid),pid:ME.patient,proc:a.note||L('Consulta','Consultation'),channel:'Web',owner:'Secretaría',date:ymd(NOW.toISOString()),stage:4,next:'Confirmar turno'});toast(L('Webhook recibido: pago aprobado.','Webhook received: payment approved.'))}
+  if(x.kind==='producto'){const bad=S.cart.find(([id,q])=>{const p=S.products.find(k=>k.id===id);return p.stock!==null&&p.stock<q});if(bad){toast(L('Stock insuficiente: el pago se reintegraría.','Insufficient stock: payment would be refunded.'));S.modal=null;R();return}
+   const oid=nid('o'),pay=nid('y');const total=x.amount;S.cart.forEach(([id,q])=>{const p=S.products.find(k=>k.id===id);if(p.stock!==null)p.stock-=q});S.orders.unshift({id:oid,pid:S.role==='patient'?ME.patient:null,items:S.cart.map(c=>[c[0],c[1]]),total,pay,status:'preparando',date:ymd(NOW.toISOString())});S.pays.push({id:pay,kind:'producto',ref:oid,amount:total,status:'approved',date:ymd(NOW.toISOString())});S.cart=[];notify(S.role==='patient'?P(ME.patient).name:L('Invitado demo','Demo guest'),'compra');toast(L(`Pago aprobado. Pedido ${oid.toUpperCase()} en preparación; stock descontado.`,`Payment approved. Order ${oid.toUpperCase()} is being prepared; stock deducted.`))}
+  if(x.kind==='capacitacion'){const e=S.enrolls.find(y=>y.id===x.enroll);const p=PAY(e.pay);p.status='approved';e.status='pagado';notify(D(e.did).name,'inscripcion',['email']);toast(L('Pago aprobado. Inscripción confirmada.','Payment approved. Enrollment confirmed.'))}
+  S.mp=null;S.modal=null;R()},
+ mpNo(){const x=S.mp;if(x.kind==='consulta'){S.appts=S.appts.filter(a=>a.id!==x.appt);const p=PAY(x.pay);if(p)p.status='rejected';toast(L('Pago rechazado (prueba). El horario sigue reservado mientras dure el contador.','Payment rejected (test). The slot stays held while the timer runs.'))}else if(x.kind==='capacitacion'){toast(L('Pago rechazado (prueba). La inscripción sigue pendiente.','Payment rejected (test). Enrollment stays pending.'))}else toast(L('Pago rechazado (prueba). No se descontó stock.','Payment rejected (test). No stock was deducted.'));S.mp=null;S.modal=null;R()},
+ cancelPrev(a){S.modal={t:'cancel',arg:a};R()},
+ cancelOk(a){const ap=S.appts.find(x=>x.id===a);const h=(new Date(ap.start)-NOW)/36e5;const p=PAY(ap.pay);ap.status='cancelado';if(h>=S.policy.refundHours){p.status='refund_requested';p.reason='paciente';ap.cancel={by:'paciente',refund:true}}else{p.noRefund=true;ap.cancel={by:'paciente',refund:false}}notify(P(ap.pid).name,'cancelacion');audit('Canceló turno '+a);S.modal=null;toast(L('Cancelación registrada.','Cancellation recorded.'));R()},
+ propAccept(a){const ap=S.appts.find(x=>x.id===a);ap.start=ap.proposal;delete ap.proposal;ap.status='confirmado';notify(P(ap.pid).name,'turno_confirmado');toast(L('Nueva fecha aceptada. Turno confirmado.','New date accepted. Appointment confirmed.'));R()},
+ propReject(a){const ap=S.appts.find(x=>x.id===a);delete ap.proposal;ap.status='cancelado';const p=PAY(ap.pay);p.status='refund_requested';p.reason='clinica';toast(L('Propuesta rechazada. Corresponde reintegro total.','Proposal declined. Full refund applies.'));R()},
+ receipt(a){S.modal={t:'receipt',arg:a};R()},
+ budAccept(a){const b=S.budgets.find(x=>x.id===a);b.status='aceptado';const l=S.leads.find(x=>x.pid===b.pid&&x.stage===6);if(l)l.stage=7;audit('Aceptó presupuesto '+a.toUpperCase());toast(L('Presupuesto aceptado. La clínica te contactará para programar.','Quote accepted. The clinic will contact you to schedule.'));R()},
+ budAsk(a){const v=document.getElementById('ask-'+a).value.trim();if(!v){toast(L('Escribí tu consulta.','Write your question.'));return}const b=S.budgets.find(x=>x.id===a);b.status='aclaracion';b.question=v;toast(L('Consulta enviada al equipo.','Question sent to the team.'));R()},
+ budView(a){S.modal={t:'budget',arg:a};R()},
+ sendMsg(a){const t=document.getElementById('msg-in').value.trim();const f=document.getElementById('msg-file').files[0];if(!t&&!f){toast(L('Escribí un mensaje o adjuntá un archivo.','Write a message or attach a file.'));return}const pid=a==='doc'?(S.segP||'p1'):ME.patient;(S.msgs[pid]=S.msgs[pid]||[]).push({from:a,at:new Date().toISOString(),text:t||L('Archivo adjunto','Attachment'),file:f?f.name:null});if(a==='doc')notify(P(pid).name,'nuevo_mensaje');audit((a==='doc'?'Respondió':'Envió')+' mensaje de seguimiento');R();const th=document.getElementById('thread');if(th)th.scrollTop=th.scrollHeight},
+ dl(a){toast(L(`“${a}”: en producción se descarga con un enlace firmado que vence en 5 minutos.`,`“${a}”: in production it downloads via a signed link that expires in 5 minutes.`))},
+ enroll(a){if(S.role!=='pro'){S.after='pro';S.view='auth';toast(L('Ingresá al portal de profesionales para inscribirte.','Sign in to the professional portal to enroll.'));render();return}const w=W(a);const d=D(ME.pro);
+  if(w.req&&!d.verified){S.enrolls.push({id:nid('e'),did:d.id,wid:a,status:'verificacion'});toast(L('Solicitud enviada. Verificaremos tu matrícula.','Request sent. We will verify your license.'));R();return}
+  const id=nid('e'),pay=nid('y');S.enrolls.push({id,did:d.id,wid:a,status:'pago_pendiente',pay});S.pays.push({id:pay,kind:'capacitacion',ref:id,amount:w.ars,status:'pending',date:ymd(NOW.toISOString())});S.mp={kind:'capacitacion',amount:w.ars,title:w[S.lang],ref:id,enroll:id};S.modal={t:'mp'};R()},
+ enrollPay(a){const e=S.enrolls.find(x=>x.id===a);const w=W(e.wid);S.mp={kind:'capacitacion',amount:w.ars,title:w[S.lang],ref:a,enroll:a};S.modal={t:'mp'};R()},
+ proPref(a){const d=D(ME.pro);d.consent[a]=!d.consent[a];audit('Actualizó consentimiento '+a);R()},
+ apptConfirm(a){const ap=S.appts.find(x=>x.id===a);ap.status='confirmado';notify(P(ap.pid).name,'turno_confirmado');audit('Confirmó turno de '+P(ap.pid).name);const t=S.tasks.find(x=>x.id==='t1');toast(L('Turno confirmado. Aviso enviado por email y WhatsApp.','Appointment confirmed. Notice sent by email and WhatsApp.'));R()},
+ apptReject(a){const ap=S.appts.find(x=>x.id===a);ap.status='rechazado';const p=PAY(ap.pay);p.status='refund_requested';p.reason='clinica';notify(P(ap.pid).name,'turno_rechazado');audit('Rechazó turno de '+P(ap.pid).name);toast(L('Solicitud rechazada. Reintegro total pendiente de autorización.','Request declined. Full refund pending authorization.'));R()},
+ apptPropose(a){const v=document.getElementById('prop-'+a).value;const ap=S.appts.find(x=>x.id===a);ap.proposal=v;ap.status='reprogramar';notify(P(ap.pid).name,'reprogramacion');audit('Propuso nueva fecha a '+P(ap.pid).name);toast(L('Propuesta enviada al paciente.','Proposal sent to the patient.'));R()},
+ agDay(a){S.agDay=a;R()},
+ block(a){S.blocked.includes(a)?S.blocked=S.blocked.filter(x=>x!==a):S.blocked.push(a);audit('Modificó disponibilidad '+a);R()},
+ remind(a){const ap=S.appts.find(x=>x.id===a);ap.reminded=true;notify(P(ap.pid).name,'recordatorio');toast(L('Recordatorio enviado (plantilla neutra).','Reminder sent (neutral template).'));R()},
+ wlOffer(a){const w=S.waitlist.find(x=>x.id===a);const s=freeSlots(1)[0];S.waitlist=S.waitlist.filter(x=>x!==w);notify(w.name,'reprogramacion');toast(L(`Ofrecido ${dt(s)} a ${w.name}. Queda reservado al pagar.`,`Offered ${dt(s)} to ${w.name}. Held once paid.`));R()},
+ lead(a){const [id,d]=a.split(':');const l=S.leads.find(x=>x.id===id);l.stage=Math.min(11,Math.max(0,l.stage+Number(d)));audit(`Movió ${id} a “${STAGES[l.stage][0]}”`);R()},
+ patient(a){S.clinicOpen=null;S.modal={t:'patient',arg:a};R()},
+ clinic(a){S.clinicOpen=a;audit('Accedió a la ficha clínica de '+P(a).name);R()},
+ feeSave(){S.fees.pres=+document.getElementById('fee-pres').value||S.fees.pres;S.fees.video=+document.getElementById('fee-video').value||S.fees.video;S.policy.refundHours=+document.getElementById('pol-h').value||24;audit('Actualizó honorarios y política');toast(L('Honorarios y política actualizados. Se aplican a nuevas reservas.','Fees and policy updated. They apply to new bookings.'));R()},
+ refund(a){const [id,m]=a.split(':');const p=PAY(id);if(m==='full'){p.status='refunded';p.refunded=p.amount}else if(m==='half'){p.status='partial_refund';p.refunded=Math.round(p.amount/2)}else{p.status='approved';p.noRefund=true}if(m!=='deny')notify(payLabel(p).split(' · ')[1]||'',"reembolso");audit(`Resolvió reembolso ${id}: ${m}`);toast(m==='deny'?L('Reembolso denegado.','Refund denied.'):L('Reembolso autorizado. En producción se ejecuta vía API de Mercado Pago.','Refund authorized. In production it runs through the Mercado Pago API.'));R()},
+ exception(a){const p=PAY(a);p.noRefund=false;p.status='refund_requested';p.reason='excepcion';audit('Autorizó excepción de reembolso '+a);toast(L('Excepción autorizada: pasa a reembolsos a autorizar.','Exception granted: moved to refunds to authorize.'));R()},
+ prodToggle(a){const p=S.products.find(x=>x.id===a);p.active=!p.active;R()},
+ stock(a){const [id,d]=a.split(':');const p=S.products.find(x=>x.id===id);p.stock=Math.max(0,p.stock+Number(d));R()},
+ price(a){const p=S.products.find(x=>x.id===a);p.price=+document.getElementById('pr-'+a).value||p.price;toast(L('Precio actualizado.','Price updated.'));R()},
+ wsPub(a){const w=W(a);w.published=!w.published;if(w.published){let n=0;PROS.forEach(d=>{if(d.consent.email){notify(d.name,'nuevo_workshop',['email']);n++}if(d.consent.wa){notify(d.name,'nuevo_workshop',['whatsapp']);n++}});toast(L(`Publicado. ${n} avisos enviados según consentimiento.`,`Published. ${n} notices sent per consent.`))}R()},
+ verify(a){const e=S.enrolls.find(x=>x.id===a);const d=D(e.did);d.verified=true;const pay=nid('y');e.status='pago_pendiente';e.pay=pay;S.pays.push({id:pay,kind:'capacitacion',ref:e.id,amount:W(e.wid).ars,status:'pending',date:ymd(NOW.toISOString())});audit('Verificó matrícula de '+d.name);toast(L('Matrícula verificada. Se habilitó el pago.','License verified. Payment enabled.'));R()},
+ testi(a){const t=S.testimonials.find(x=>x.id===a);t.published=!t.published;R()},
+ seoEdit(a){S.modal={t:'seo',arg:+a};R()},
+ perm(a){S.perms[a]=!S.perms[a];audit(`Permiso de secretaría “${a}”: ${S.perms[a]?'habilitado':'deshabilitado'}`);R()}
+};
+const C={
+ bkPolicy(t){S.bk.policy=t.checked;R()},
+ crmQ(t){S.crmF=Object.assign(S.crmF||{},{q:t.value});R()},
+ crmCh(t){S.crmF=Object.assign(S.crmF||{},{ch:t.value});R()},
+ segP(t){S.segP=t.value;R()},
+ proSpec(t){S.proF=Object.assign(S.proF||{},{spec:t.value});R()},
+ proCountry(t){S.proF=Object.assign(S.proF||{},{country:t.value});R()},
+ orderSt(t){const o=S.orders.find(x=>x.id===t.dataset.id);o.status=t.value;if(t.value==='listo'){notify(o.pid?P(o.pid).name:'Invitado demo','pedido_preparado',['whatsapp']);toast(L('Aviso de pedido listo enviado por WhatsApp.','Order-ready notice sent on WhatsApp.'))}R()},
+ task(t){const k=S.tasks.find(x=>x.id===t.dataset.id);k.done=t.checked;R()}
+};
+const F={
+ taylor(){S.leads.push({id:'L-'+(1050+(++uid)),name:document.getElementById('tm-name').value+' (Taylor Made)',proc:'Taylor Made · '+document.getElementById('tm-goal').value,channel:'Web',owner:'Dr. Bujanda',date:ymd(NOW.toISOString()),stage:3,next:'Contactar por '+document.getElementById('tm-ch').value});toast(L('Solicitud recibida. Se registró en el CRM como “Evaluación solicitada”.','Request received. Logged in the CRM as “Evaluation requested”.'));R()},
+ auth(){if(S.authTab==='rec'){toast(L('Si el email existe, enviaremos un enlace de recuperación (demo).','If the email exists, we will send a reset link (demo).'));return}S.role=S.after==='pro'?'pro':'patient';const a=S.after;S.after=null;if(a==='patient'&&S.bk&&S.bk.step===1&&S.bk.proc!==undefined){S.view='patient';S.sub='reservar';render();return}go(S.role)},
+ intake(){S.intakeSent[ME.patient]=new Date().toISOString();audit('Envió formulario de admisión');toast(L('Formulario enviado.','Form submitted.'));R()},
+ budget(){const pid=document.getElementById('bu-p').value;S.budgets.unshift({id:nid('b'),pid,proc:document.getElementById('bu-t').value,amount:+document.getElementById('bu-a').value,status:'enviado',date:ymd(NOW.toISOString())});notify(P(pid).name,'presupuesto');audit('Emitió presupuesto a '+P(pid).name);toast(L('Presupuesto emitido y notificado.','Quote issued and notified.'));R()},
+ doc(){const pid=S.segP||'p1';const type=document.getElementById('doc-t').value;if(type==='Receta'){toast(L('Las recetas se emiten desde la plataforma de prescripción electrónica habilitada (integración pendiente).','Prescriptions are issued from the authorized e-prescription platform (integration pending).'));return}S.docs.unshift({pid,name:document.getElementById('doc-n').value,type,by:'Dr. Diego Bujanda',date:ymd(NOW.toISOString())});notify(P(pid).name,'nuevo_documento');audit('Publicó documento para '+P(pid).name);toast(L('Documento publicado. Aviso neutro enviado.','Document published. Neutral notice sent.'));R()},
+ campaign(){const f=S.proF||{};const list=PROS.filter(p=>(!f.spec||p.spec===f.spec)&&(!f.country||p.country===f.country)&&p.consent.email);list.forEach(p=>notify(p.name,'nuevo_workshop',['email']));toast(L(`Campaña enviada a ${list.length} profesionales con consentimiento.`,`Campaign sent to ${list.length} professionals with consent.`));R()},
+ bio(){S.bio.es=document.getElementById('bio-es').value;S.bio.en=document.getElementById('bio-en').value;audit('Editó biografía del médico');toast(L('Biografía publicada en el perfil médico.','Biography published on the doctor profile.'));R()},
+ seo(form){const p=S.seo[+form.dataset.i];p.title=document.getElementById('seo-t').value;p.desc=document.getElementById('seo-d').value;p.reviewed=document.getElementById('seo-r').value;p.alts=+document.getElementById('seo-a').value;p.hreflang=document.getElementById('seo-h').checked;audit('Editó SEO de '+p.path);S.modal=null;toast(L('SEO actualizado.','SEO updated.'));R()},
+ aitest(){S.aiTests.unshift({date:ymd(NOW.toISOString()),engine:document.getElementById('ai-e').value,q:document.getElementById('ai-q').value,mentioned:document.getElementById('ai-m').checked});R()},
+ task(){S.tasks.push({id:nid('t'),text:document.getElementById('task-in').value,done:false});R()}
+};
+document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(!b)return;if(b.disabled)return;if(b.dataset.act==='noop')return;const fn=A[b.dataset.act];if(fn){if(b.tagName==='A')return;e.preventDefault();fn(b.dataset.arg,b)}});
+document.addEventListener('change',e=>{const t=e.target;if(t.dataset.ch&&C[t.dataset.ch])C[t.dataset.ch](t)});
+document.addEventListener('input',e=>{const t=e.target;if(t.dataset.ch==='count'){const el=document.getElementById(t.dataset.target);if(el)el.textContent=t.value.length}});
+document.addEventListener('submit',e=>{const f=e.target;if(f.dataset.form&&F[f.dataset.form]){e.preventDefault();F[f.dataset.form](f)}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&S.modal){S.modal=null;R()}});
+setInterval(()=>{if(!S.hold)return;const s=Math.round((S.hold.until-Date.now())/1000);const el=document.getElementById('holdClock');if(s<=0){S.hold=null;if(S.bk.step===3){S.bk.step=2;S.bk.slot=null;toast(L('La reserva temporal venció y el horario se liberó.','The hold expired and the slot was released.'));R()}return}if(el)el.textContent=String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')},1000);
+(function(){const h=(location.hash||'').slice(1);const map={tratamientos:'treatments',doctor:'doctor',taylor:'taylor',instalaciones:'facilities',turismo:'tourism',tienda:'shop',workshops:'workshops',notas:'notes',faq:'faq'};if(map[h])S.view=map[h];render()})();
+</script>
